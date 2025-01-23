@@ -253,7 +253,9 @@ func read_messages() -> void:
 		if message.is_empty() or message == null:
 			print("WARNING: read an empty message with non-zero size!")
 		else:
-			message.payload = bytes_to_var_with_objects(message.payload).decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
+			#message.payload = bytes_to_var(message.payload).decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
+			var decompressed_payload = PackedByteArray(message.payload).decompress(FileAccess.COMPRESSION_GZIP)
+			var data = bytes_to_var(decompressed_payload)
 			# Get the remote user's ID
 			var message_sender: int = message['remote_steam_id']
 			# Print the packet to output
