@@ -15,7 +15,7 @@ extends Control
 @onready var player_one_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/PlayerOneAvatar
 @onready var player_two_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/PlayerTwoAvatar
 # Scenes
-@onready var lobby_data_scene = preload("res://Scenes/Menus/LobbyData/lobby_data.gd")
+@onready var lobby_data_scene = preload("res://Scenes/Menus/LobbyData/LobbyData.tscn")
 
 const PACKET_READ_LIMIT: int = 32
 
@@ -119,8 +119,7 @@ func _on_lobby_match_list(these_lobbies: Array) -> void:
 			# Create a button for the lobby
 			var lobby_data = lobby_data_scene.instantiate()
 			lobby_data.username = lobby_name
-			lobby_data.time = lobby_time_limit
-			lobby_data.ranked = lobby_ranked
+			lobby_data.time_limit = lobby_time_limit
 			lobby_data.restrictions = lobby_restrictions
 			lobby_data.id = this_lobby
 			# Add the new lobby to the list
@@ -254,7 +253,7 @@ func read_messages() -> void:
 		if message.is_empty() or message == null:
 			print("WARNING: read an empty message with non-zero size!")
 		else:
-			message.payload = bytes_to_var(message.payload).decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
+			message.payload = bytes_to_var_with_objects(message.payload).decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
 			# Get the remote user's ID
 			var message_sender: int = message['remote_steam_id']
 			# Print the packet to output
