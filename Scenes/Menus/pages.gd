@@ -143,7 +143,7 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 		# Join Message into match lobby chat
 		var join_message = Label.new()
 		join_message.text = ("%s has joined the lobby" % str(Global.steam_username))
-		join_message.modulate = Color("00ff22")
+		join_message.modulate = Color("0000ff")
 		lobby_page_chat.add_child(join_message)
 	# Else it failed for some reason
 	else:
@@ -205,24 +205,28 @@ func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id:
 		print("%s has joined the lobby." % changer_name)
 		var message = Label.new()
 		message.text = "%s has joined the lobby." % changer_name
+		message.modulate = Color("00ff22")
 		lobby_page_chat.add_child(message)
 	# Else if a player has left the lobby
 	elif chat_state == Steam.CHAT_MEMBER_STATE_CHANGE_LEFT:
 		print("%s has left the lobby." % changer_name)
 		var message = Label.new()
 		message.text = "%s has left the lobby." % changer_name
+		message.modulate = Color("ff0000")
 		lobby_page_chat.add_child(message)
 	# Else if a player has been kicked
 	elif chat_state == Steam.CHAT_MEMBER_STATE_CHANGE_KICKED:
 		print("%s has been kicked from the lobby." % changer_name)
 		var message = Label.new()
 		message.text = "%s has been kicked from the lobby." % changer_name
+		message.modulate = Color("8f00ff")
 		lobby_page_chat.add_child(message)
 	# Else if a player has been banned
 	elif chat_state == Steam.CHAT_MEMBER_STATE_CHANGE_BANNED:
 		print("%s has been banned from the lobby." % changer_name)
 		var message = Label.new()
 		message.text = "%s has been banned from the lobby." % changer_name
+		message.modulate = Color("ef224b")
 		lobby_page_chat.add_child(message)
 	# Else there was some unknown change
 	else:
@@ -234,7 +238,6 @@ func _on_lobby_message(this_lobby_id: int, user: int, buffer: String, chat_type:
 	print("Message Recieved")
 	var message = Label.new()
 	message.text = buffer
-	message.modulate = Color("ff0000")
 	lobby_page_chat.add_child(message)
 
 #############
