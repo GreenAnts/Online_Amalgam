@@ -40,7 +40,7 @@ func change_page(page):
 		landing_page.visible = true
 		remember_open_page = 0
 	elif page == "lobbies":
-		SignalBus.update_lobby_listings
+		SignalBus.update_lobby_listings.emit()
 		lobbies_page.visible = true
 		remember_open_page = 1
 	elif page == "lobby":

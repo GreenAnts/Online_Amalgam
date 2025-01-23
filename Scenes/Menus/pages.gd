@@ -15,6 +15,7 @@ extends Control
 @onready var player_two_label = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/VBoxContainer/PlayerTwoName
 @onready var player_one_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/PlayerOneAvatar
 @onready var player_two_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/PlayerTwoAvatar
+@onready var start_match = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch
 # Scenes
 @onready var lobby_data_scene = preload("res://Scenes/Menus/LobbyData/LobbyData.tscn")
 
@@ -24,7 +25,11 @@ var lobby_data
 var lobby_id: int = 0
 var lobby_members: Array = []
 var lobby_members_max: int = 2
+var matchmaking_phase: int = 0
 var lobby_vote_kick: bool = false
+# are you automatching?
+var automatch : bool = false
+
 # Steam ID
 # > Global.steam_id
 # Steam Username
@@ -76,7 +81,7 @@ func check_command_line() -> void:
 				# At this point, you'll probably want to change scenes
 				# Something like a loading into lobby screen
 				print("Command line lobby ID: %s" % these_arguments[1])
-				#join_lobby(int(these_arguments[1]))
+				join_lobby(int(these_arguments[1]))
 
 func create_lobby() -> void:
 	# Make sure a lobby is not already set
@@ -106,31 +111,39 @@ func _get_lobby_list() -> void:
 	print("Requesting a lobby list")
 	Steam.requestLobbyList()
 
-func _on_lobby_match_list(these_lobbies: Array) -> void:
+func _clear_lobby_list():
 	for lobby in lobby_list.get_children():
 		lobby.queue_free()
-	for this_lobby in these_lobbies:
-		if Steam.getLobbyData(this_lobby, "game") == "Amalgam":
-			# Pull lobby data from Steam, these are specific to our example
-			var lobby_name: String = Steam.getLobbyData(this_lobby, "name")
-			var lobby_time_limit: String = Steam.getLobbyData(this_lobby, "time_limit")
-			var lobby_game_mode: String = Steam.getLobbyData(this_lobby, "game_mode")
-			var lobby_restrictions: String = Steam.getLobbyData(this_lobby, "restrictions")
-			# Get the current number of members
-			var lobby_num_members: int = Steam.getNumLobbyMembers(this_lobby)
-			# Create a button for the lobby
-			var lobby_data = lobby_data_scene.instantiate()
-			lobby_data.game_mode = lobby_game_mode
-			lobby_data.username = lobby_name
-			lobby_data.time_limit = lobby_time_limit
-			lobby_data.restrictions = lobby_restrictions
-			lobby_data.id = this_lobby
-			# Add the new lobby to the list
-			lobby_list.add_child(lobby_data)
+
+func _on_lobby_match_list(these_lobbies: Array) -> void:
+	# clear the list of lobby from the scene
+	_clear_lobby_list()
+	if automatch == true:
+		_automatch_search(these_lobbies)
+	else:
+		for this_lobby in these_lobbies:
+			if Steam.getLobbyData(this_lobby, "game") == "Amalgam":
+				# Pull lobby data from Steam, these are specific to our example
+				var lobby_name: String = Steam.getLobbyData(this_lobby, "name")
+				var lobby_time_limit: String = Steam.getLobbyData(this_lobby, "time_limit")
+				var lobby_game_mode: String = Steam.getLobbyData(this_lobby, "game_mode")
+				var lobby_restrictions: String = Steam.getLobbyData(this_lobby, "restrictions")
+				# Get the current number of members
+				var lobby_num_members: int = Steam.getNumLobbyMembers(this_lobby)
+				# Create a button for the lobby
+				var lobby_data = lobby_data_scene.instantiate()
+				lobby_data.game_mode = lobby_game_mode
+				lobby_data.username = lobby_name
+				lobby_data.time_limit = lobby_time_limit
+				lobby_data.restrictions = lobby_restrictions
+				lobby_data.id = this_lobby
+				# Add the new lobby to the list
+				lobby_list.add_child(lobby_data)
 
 func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, response: int) -> void:
 	# If joining was successful
 	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
+		SignalBus.change_pages.emit("lobby")
 		# Set this lobby ID as your lobby ID
 		lobby_id = this_lobby_id
 		# Get the lobby members
@@ -168,10 +181,14 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 func _update_lobby_player_info(this_lobby_id: int):
 	player_one_label.text = Global.steam_username
 	if lobby_members.size() > 1:
-			# Loop through all members that aren't you
-			for this_member in lobby_members:
-				if this_member['steam_id'] != Global.steam_id:
-					player_two_label.text = this_member['steam_name']
+		# Loop through all members that aren't you
+		for this_member in lobby_members:
+			if this_member['steam_id'] != Global.steam_id:
+				player_two_label.text = this_member['steam_name']
+		start_match.disabled = false
+	else:
+		player_two_label.text = "Waiting for Player..."
+		start_match.disabled = true
 
 func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 	# Get the lobby owner's name
@@ -242,12 +259,57 @@ func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id:
 		print("%s did... something." % changer_name)
 	# Update the lobby now that a change has occurred
 	get_lobby_members()
+	_update_lobby_player_info(this_lobby_id)
 
 func _on_lobby_message(this_lobby_id: int, user: int, buffer: String, chat_type: int) -> void:
 	print("Message Recieved")
 	var message = Label.new()
 	message.text = buffer
 	lobby_page_chat.add_child(message)
+	
+####################
+#    Auto Match    #
+####################
+# Iteration for trying different distances
+func matchmaking_loop() -> void:
+	# If this matchmake_phase is 3 or less, keep going
+	if matchmaking_phase < 4:
+		###
+		# Add other filters for things like game modes, etc.
+		# Since this is an example, we cannot set game mode or text match features.
+		# However you could use addRequestLobbyListStringFilter to look for specific
+		# text in lobby metadata to match different criteria.
+		###
+		# Set the distance filter
+		Steam.addRequestLobbyListDistanceFilter(matchmaking_phase)
+		# Request a list
+		Steam.requestLobbyList()
+	else:
+		automatch = false
+		print("[STEAM] Failed to automatically match you with a lobby. Please try again.")
+
+func _automatch_search(lobbies):
+	var attempting_join: bool = false
+	# Show the list 
+	for this_lobby in lobbies:
+		# Pull lobby data from Steam
+		var lobby_name: String = Steam.getLobbyData(this_lobby, "name")
+		var lobby_nums: int = Steam.getNumLobbyMembers(this_lobby)
+		# Due to testing on the demo gameID
+		var lobby_game: String = Steam.getLobbyData(this_lobby, "game")
+		
+		# Attempt to join the first lobby that fits the criteria
+		if lobby_game == "Amalgam" && lobby_nums < lobby_members_max and not attempting_join:
+			# Turn on attempting_join
+			attempting_join = true
+			print("Attempting to join lobby...")
+			Steam.joinLobby(this_lobby)
+			automatch = false
+		# No lobbies that matched were found, go onto the next phase
+	if not attempting_join:
+		# Increment the matchmake_phase
+		matchmaking_phase += 1
+		matchmaking_loop()
 
 #############
 #    P2P    #
@@ -343,10 +405,13 @@ func _on_leave_lobby_pressed() -> void:
 		lobby_members.clear()
 		for child in lobby_page_chat.get_children():
 			child.queue_free()
-		# refresh list of other lobbies available
-		_get_lobby_list()
+		# Hide outdated lobbies listed
+		_clear_lobby_list()
 		# Change pages from LobbyPage to the LobbiesPage via signal to main.gd
 		SignalBus.change_pages.emit("lobbies")
+		# Refresh list of other lobbies available
+		await(get_tree().create_timer(1).timeout)
+		_get_lobby_list()
 
 ####################
 #  Singal-Buttons  #
@@ -363,3 +428,10 @@ func _on_match_lobby_message_gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_text_completion_accept"):
 		get_viewport().set_input_as_handled()
 		_on_send_message_pressed()
+
+func _on_quick_match_pressed() -> void:
+	automatch = true
+	# Set the matchmaking process to start over
+	matchmaking_phase = 0
+	# Start the loop!
+	matchmaking_loop()

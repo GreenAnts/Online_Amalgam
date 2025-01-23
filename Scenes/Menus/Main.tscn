@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cqigfn5icyf86"]
+[gd_scene load_steps=22 format=3 uid="uid://cqigfn5icyf86"]
 
 [ext_resource type="Script" path="res://Scenes/Menus/main.gd" id="1_yyaud"]
 [ext_resource type="Script" path="res://Scenes/Menus/pages.gd" id="2_o4qpy"]
@@ -23,6 +23,24 @@
 [sub_resource type="Theme" id="Theme_2rob6"]
 
 [sub_resource type="Theme" id="Theme_fs5eo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k0ubx"]
+bg_color = Color(0.144063, 0.144063, 0.144062, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.269182, 0.213924, 0.121609, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -877,14 +895,68 @@ vertical_alignment = 1
 [node name="Profile" type="Control" parent="Pages/SidePanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 0.7
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Pages/SidePanel/VBoxContainer/Profile"]
-layout_mode = 0
-offset_left = 42.0
-offset_top = 96.0
-offset_right = 170.0
-offset_bottom = 146.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -188.0
+offset_top = -52.5
+offset_right = 188.0
+offset_bottom = 52.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 10
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Username" type="Label" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("6_hgkfr")
+theme_override_font_sizes/font_size = 20
+text = "Username"
+horizontal_alignment = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="RatinIcon" type="TextureRect" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("5_v67o3")
+expand_mode = 3
+
+[node name="Rating" type="Label" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_fs5eo")
+theme_override_font_sizes/font_size = 15
+text = "1000"
+horizontal_alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="PointsIcon" type="TextureRect" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("5_v67o3")
+expand_mode = 3
+
+[node name="Points" type="Label" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme = SubResource("Theme_fs5eo")
+theme_override_font_sizes/font_size = 15
+text = "100"
+horizontal_alignment = 2
 
 [node name="Avatar" type="TextureButton" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
@@ -895,40 +967,120 @@ texture_normal = ExtResource("5_v67o3")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Pages/SidePanel/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 10
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
 
-[node name="Username" type="Label" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer"]
+[node name="Leaderboards" type="Control" parent="Pages/SidePanel/VBoxContainer/MarginContainer"]
 layout_mode = 2
-theme = ExtResource("6_hgkfr")
-theme_override_font_sizes/font_size = 15
-text = "Username"
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer"]
+[node name="Panel" type="Panel" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_k0ubx")
+
+[node name="MarginContainer" type="MarginContainer" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer"]
 layout_mode = 2
 
-[node name="Rating" type="Label" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Header" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme = SubResource("Theme_fs5eo")
-theme_override_font_sizes/font_size = 15
-text = "elo Rating"
+theme_override_colors/font_color = Color(0.777467, 0.530304, 0.622051, 1)
+theme_override_font_sizes/font_size = 25
+text = "Top Players"
+horizontal_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Spacer" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-texture = ExtResource("5_v67o3")
-expand_mode = 3
+theme_override_colors/font_color = Color(0.777467, 0.530304, 0.622051, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+
+[node name="Leader1" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "1st: Luigi"
+
+[node name="Leader2" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "2nd: The Capybara"
+
+[node name="Leader3" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "3rd: Someone Who Definitely Exists"
+
+[node name="Leader4" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "4th: "
+
+[node name="Leader5" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "5th"
+
+[node name="Leader6" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "6th"
+
+[node name="Leader7" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "7th"
+
+[node name="Leader8" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "8th"
+
+[node name="Leader9" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "9th"
+
+[node name="Leader10" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "10th"
 
 [node name="Settings" type="Control" parent="Pages/SidePanel/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 
-[node name="Leaderboards" type="Control" parent="Pages/SidePanel/VBoxContainer"]
+[node name="ButtonSpacer" type="Control" parent="Pages/SidePanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
 
-[node name="Settings2" type="TextureButton" parent="Pages/SidePanel"]
+[node name="Settings2" type="TextureButton" parent="Pages/SidePanel/VBoxContainer/ButtonSpacer"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -946,7 +1098,7 @@ texture_hover = ExtResource("8_h3ef1")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Exit" type="TextureButton" parent="Pages/SidePanel"]
+[node name="Exit" type="TextureButton" parent="Pages/SidePanel/VBoxContainer/ButtonSpacer"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -977,6 +1129,7 @@ dialog_text = "“You have your way. I have my way. As for the right way, the co
 dialog_autowrap = true
 cancel_button_text = "I'll stay."
 
+[connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/QuickMatch" to="Pages" method="_on_quick_match_pressed"]
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/CustomGame" to="." method="_on_custom_game_pressed"]
 [connection signal="timeout" from="Pages/LobbiesPage/Timer" to="Pages/LobbiesPage" method="_on_timer_timeout"]
 [connection signal="pressed" from="Pages/LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/CreateLobby" to="Pages" method="_on_create_lobby_pressed"]
@@ -987,5 +1140,5 @@ cancel_button_text = "I'll stay."
 [connection signal="pressed" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/LeaveLobby" to="Pages" method="_on_leave_lobby_pressed"]
 [connection signal="pressed" from="Pages/ProfilePage/HideBtn" to="." method="_on_hide_btn_pressed"]
 [connection signal="toggled" from="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/Avatar" to="." method="_on_avatar_toggled"]
-[connection signal="pressed" from="Pages/SidePanel/Exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="Pages/SidePanel/VBoxContainer/ButtonSpacer/Exit" to="." method="_on_exit_pressed"]
 [connection signal="confirmed" from="ConfirmationDialog" to="." method="_on_confirmation_dialog_confirmed"]
