@@ -1,0 +1,60 @@
+[gd_scene load_steps=3 format=3 uid="uid://beepkj1youmnb"]
+
+[ext_resource type="Texture2D" uid="uid://dgvpr1tu3gbrf" path="res://Media/Images/icon.svg" id="1_37i7w"]
+[ext_resource type="Script" path="res://Scenes/Menus/LobbyData/lobby_data.gd" id="1_gbawb"]
+
+[node name="LobbyData" type="MarginContainer"]
+offset_right = 176.0
+offset_bottom = 368.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+script = ExtResource("1_gbawb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Rank" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.8, 0, 1)
+text = "1000"
+horizontal_alignment = 1
+
+[node name="Username" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Player Name"
+horizontal_alignment = 1
+
+[node name="Avatar" type="TextureRect" parent="VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_37i7w")
+stretch_mode = 5
+
+[node name="GameMode" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.552941, 1, 1)
+text = "Standard Game"
+horizontal_alignment = 1
+
+[node name="TimeLimit" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "No Time Limit"
+horizontal_alignment = 1
+
+[node name="Restrictions" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Any Skill Level"
+horizontal_alignment = 1
+
+[node name="JoinLobby" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+text = "Join Game"
+
+[connection signal="pressed" from="VBoxContainer/JoinLobby" to="." method="_on_join_lobby_pressed"]

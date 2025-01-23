@@ -1,0 +1,11 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://ghoclswayha"]
+
+[ext_resource type="FontFile" uid="uid://dav58q3vhieop" path="res://Media/Themes/Fonts/NIRMALA.TTF" id="1_m8ss3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fgxvp"]
+bg_color = Color(0.281187, 0.281187, 0.281186, 1)
+
+[resource]
+Label/font_sizes/font_size = 20
+Label/fonts/font = ExtResource("1_m8ss3")
+Panel/styles/panel = SubResource("StyleBoxFlat_fgxvp")
