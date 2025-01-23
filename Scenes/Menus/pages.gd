@@ -142,7 +142,8 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 		lobby_page.visible = true
 		# Join Message into match lobby chat
 		var join_message = Label.new()
-		join_message.text = str(Global.steam_username) + " has joined the lobby"
+		join_message.text = ("%s has joined the lobby" % str(Global.steam_username))
+		join_message.modulate = Color("00ff22")
 		lobby_page_chat.add_child(join_message)
 	# Else it failed for some reason
 	else:
@@ -233,6 +234,7 @@ func _on_lobby_message(this_lobby_id: int, user: int, buffer: String, chat_type:
 	print("Message Recieved")
 	var message = Label.new()
 	message.text = buffer
+	message.modulate = Color("ff0000")
 	lobby_page_chat.add_child(message)
 
 #############
@@ -253,11 +255,9 @@ func read_messages() -> void:
 		if message.is_empty() or message == null:
 			print("WARNING: read an empty message with non-zero size!")
 		else:
-			#message.payload = bytes_to_var(message.payload).decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
-			var decompressed_payload = PackedByteArray(message.payload).decompress(FileAccess.COMPRESSION_GZIP)
-			var data = bytes_to_var(decompressed_payload)
+			message.payload = bytes_to_var(message.payload.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP))
 			# Get the remote user's ID
-			var message_sender: int = message['remote_steam_id']
+			var message_sender: int = message['identity']
 			# Print the packet to output
 			print("Message Payload: %s" % message.payload)
 			# Append logic here to deal with message data.
