@@ -2,6 +2,7 @@ extends Control
 
 # Lobbies (List) Nodes
 @onready var lobbies_page = $LobbiesPage
+@onready var no_lobby_notice = $LobbiesPage/VBoxContainer/MarginContainer/NoLobbyNotice
 @onready var lobby_list = $LobbiesPage/VBoxContainer/MarginContainer/ScrollContainer/CenterContainer/LobbyList
 @onready var game_mode_options = $LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/HBoxContainer/GameModeOptions
 @onready var restrictions_options = $LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/HBoxContainer/RestrictionsOptions
@@ -38,6 +39,7 @@ var restrictions : int
 func _ready() -> void:
 	# Connect signals from SignalBus Global
 	SignalBus.join_lobby.connect(join_lobby)
+	SignalBus.update_lobby_listings.connect(_get_lobby_list)
 	
 	# Lobbies
 	Steam.join_requested.connect(_on_lobby_join_requested)
@@ -89,10 +91,10 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		# Set this lobby as joinable, just in case, though this should be done by default
 		Steam.setLobbyJoinable(lobby_id, true)
 		# Set some lobby data
-		Steam.setLobbyData(lobby_id, "mode", "Amalgam")
+		Steam.setLobbyData(lobby_id, "game", "Amalgam")
 		Steam.setLobbyData(lobby_id, "name", str(Global.steam_username))
-		Steam.setLobbyData(lobby_id, "game_mode", str(game_mode))
 		Steam.setLobbyData(lobby_id, "time_limit", str(time_limit))
+		Steam.setLobbyData(lobby_id, "game_mode", str(game_mode))
 		Steam.setLobbyData(lobby_id, "restrictions", str(restrictions))
 		# Allow P2P connections to fallback to being relayed through Steam if needed
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
@@ -108,16 +110,17 @@ func _on_lobby_match_list(these_lobbies: Array) -> void:
 	for lobby in lobby_list.get_children():
 		lobby.queue_free()
 	for this_lobby in these_lobbies:
-		if Steam.getLobbyData(this_lobby, "mode") == "Amalgam":
+		if Steam.getLobbyData(this_lobby, "game") == "Amalgam":
 			# Pull lobby data from Steam, these are specific to our example
 			var lobby_name: String = Steam.getLobbyData(this_lobby, "name")
 			var lobby_time_limit: String = Steam.getLobbyData(this_lobby, "time_limit")
-			var lobby_ranked: String = Steam.getLobbyData(this_lobby, "ranked")
+			var lobby_game_mode: String = Steam.getLobbyData(this_lobby, "game_mode")
 			var lobby_restrictions: String = Steam.getLobbyData(this_lobby, "restrictions")
 			# Get the current number of members
 			var lobby_num_members: int = Steam.getNumLobbyMembers(this_lobby)
 			# Create a button for the lobby
 			var lobby_data = lobby_data_scene.instantiate()
+			lobby_data.game_mode = lobby_game_mode
 			lobby_data.username = lobby_name
 			lobby_data.time_limit = lobby_time_limit
 			lobby_data.restrictions = lobby_restrictions
@@ -134,9 +137,7 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 		get_lobby_members()
 		# Make the initial handshake
 		make_p2p_handshake()
-		# Set the Scene Nodes to properly display player data.
-		player_one_label.text = Global.steam_username
-		player_two_label.text = "Waiting for Player..."
+		_update_lobby_player_info(this_lobby_id)
 		# Change from lobby list to match lobby
 		lobbies_page.visible = false
 		lobby_page.visible = true
@@ -163,6 +164,14 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 		print("Failed to join this chat room: %s" % fail_reason)
 		#Reopen the lobby list
 		_get_lobby_list()
+
+func _update_lobby_player_info(this_lobby_id: int):
+	player_one_label.text = Global.steam_username
+	if lobby_members.size() > 1:
+			# Loop through all members that aren't you
+			for this_member in lobby_members:
+				if this_member['steam_id'] != Global.steam_id:
+					player_two_label.text = this_member['steam_name']
 
 func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 	# Get the lobby owner's name
@@ -286,7 +295,7 @@ func send_message(this_target: int, packet_data: Dictionary) -> void:
 
 func _on_network_messages_session_failed(steam_id: int, session_error: int, state: int, debug_msg: String) -> void:
 	print(debug_msg)
-
+	
 #############
 #  Buttons  #
 #############
@@ -300,6 +309,9 @@ func _on_create_lobby_pressed() -> void:
 
 func _on_refresh_lobbies_list_pressed() -> void:
 	_get_lobby_list()
+	lobbies_page.timer.stop()
+	lobbies_page.timer.start()
+
 
 func _on_send_message_pressed() -> void:
 	# Get the entered chat message with username attached
@@ -331,6 +343,8 @@ func _on_leave_lobby_pressed() -> void:
 		lobby_members.clear()
 		for child in lobby_page_chat.get_children():
 			child.queue_free()
+		# refresh list of other lobbies available
+		_get_lobby_list()
 		# Change pages from LobbyPage to the LobbiesPage via signal to main.gd
 		SignalBus.change_pages.emit("lobbies")
 

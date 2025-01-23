@@ -11,6 +11,7 @@ var username
 var user_rank
 
 # Game Data
+var game_mode
 var time_limit
 var restrictions
 var id

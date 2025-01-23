@@ -17,14 +17,8 @@ func _ready() -> void:
 # # # # # # #
 #  Buttons  #
 # # # # # # #
-#DEBUG TEMP BUTTON
-func _on_join_pressed() -> void:
-	change_page("lobby")
 # Go to LobbiesPage (FROM: LandingPage)
 func _on_custom_game_pressed() -> void:
-	change_page("lobbies")
-# Go to LobbiesPage (FROM: LobbyPage)
-func _on_leave_lobby_pressed() -> void:
 	change_page("lobbies")
 # Go to LandingPage (FROM: LobbyPage)
 func _on_back_btn_pressed() -> void:
@@ -46,6 +40,7 @@ func change_page(page):
 		landing_page.visible = true
 		remember_open_page = 0
 	elif page == "lobbies":
+		SignalBus.update_lobby_listings
 		lobbies_page.visible = true
 		remember_open_page = 1
 	elif page == "lobby":

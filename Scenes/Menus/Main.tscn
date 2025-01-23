@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cqigfn5icyf86"]
+[gd_scene load_steps=21 format=3 uid="uid://cqigfn5icyf86"]
 
 [ext_resource type="Script" path="res://Scenes/Menus/main.gd" id="1_yyaud"]
 [ext_resource type="Script" path="res://Scenes/Menus/pages.gd" id="2_o4qpy"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dgvpr1tu3gbrf" path="res://Media/Images/icon.svg" id="5_v67o3"]
 [ext_resource type="Texture2D" uid="uid://boihihu2y0vmq" path="res://Media/Images/Reload-White.png" id="6_f2daj"]
 [ext_resource type="Theme" uid="uid://ghoclswayha" path="res://Media/Themes/ui_default.tres" id="6_hgkfr"]
+[ext_resource type="Script" path="res://Scenes/Menus/LobbiesPage/lobbies_page.gd" id="6_vbm1o"]
 [ext_resource type="Texture2D" uid="uid://cxy0j0bdrwop2" path="res://Media/Images/Setting-White.png" id="7_paw2l"]
 [ext_resource type="Texture2D" uid="uid://beyl0tofwg8wn" path="res://Media/Images/Reload-White-select.png" id="7_pfu67"]
 [ext_resource type="Texture2D" uid="uid://dxvb8eg81bsmu" path="res://Media/Images/Back-White.png" id="8_0ubqc"]
@@ -169,6 +170,11 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
+script = ExtResource("6_vbm1o")
+
+[node name="Timer" type="Timer" parent="Pages/LobbiesPage"]
+wait_time = 16.0
+autostart = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Pages/LobbiesPage"]
 layout_mode = 1
@@ -186,6 +192,12 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
+[node name="NoLobbyNotice" type="Label" parent="Pages/LobbiesPage/VBoxContainer/MarginContainer"]
+visible = false
+layout_mode = 2
+text = "There are no lobbies currently available...you may create one below."
+horizontal_alignment = 1
+
 [node name="ScrollContainer" type="ScrollContainer" parent="Pages/LobbiesPage/VBoxContainer/MarginContainer"]
 layout_mode = 2
 
@@ -199,35 +211,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 6
-
-[node name="LobbyData" type="VBoxContainer" parent="Pages/LobbiesPage/VBoxContainer/MarginContainer/ScrollContainer/CenterContainer/LobbyList"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="Pages/LobbiesPage/VBoxContainer/MarginContainer/ScrollContainer/CenterContainer/LobbyList/LobbyData"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-
-[node name="TextureRect" type="TextureRect" parent="Pages/LobbiesPage/VBoxContainer/MarginContainer/ScrollContainer/CenterContainer/LobbyList/LobbyData/MarginContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-texture = ExtResource("5_v67o3")
-expand_mode = 5
-stretch_mode = 4
-
-[node name="Label" type="Label" parent="Pages/LobbiesPage/VBoxContainer/MarginContainer/ScrollContainer/CenterContainer/LobbyList/LobbyData"]
-layout_mode = 2
-size_flags_vertical = 6
-theme_override_font_sizes/font_size = 15
-text = "This is a demo lobby to join...
-"
-horizontal_alignment = 1
-
-[node name="Join" type="Button" parent="Pages/LobbiesPage/VBoxContainer/MarginContainer/ScrollContainer/CenterContainer/LobbyList/LobbyData"]
-layout_mode = 2
-size_flags_vertical = 3
-text = "Join Game"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Pages/LobbiesPage/VBoxContainer"]
 layout_mode = 2
@@ -325,6 +308,21 @@ text = "Create Game"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="HBoxContainer" type="HBoxContainer" parent="Pages/LobbiesPage"]
+layout_mode = 0
+offset_left = 1090.0
+offset_top = 23.0
+offset_right = 1130.0
+offset_bottom = 63.0
+
+[node name="Label" type="Label" parent="Pages/LobbiesPage/HBoxContainer"]
+layout_mode = 2
+text = "Auto Updating in..."
+
+[node name="TimerText" type="Label" parent="Pages/LobbiesPage/HBoxContainer"]
+layout_mode = 2
+text = "15"
+
 [node name="RefreshLobbiesList" type="TextureButton" parent="Pages/LobbiesPage"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
@@ -417,7 +415,7 @@ size_flags_vertical = 0
 [node name="PlayerOneData" type="HBoxContainer" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 20
 
 [node name="PlayerOneAvatar" type="TextureButton" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData"]
 custom_minimum_size = Vector2(50, 50)
@@ -436,13 +434,11 @@ alignment = 1
 layout_mode = 2
 theme = ExtResource("6_hgkfr")
 text = "Username"
-horizontal_alignment = 1
 
 [node name="PlayerOneRating" type="Label" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/VBoxContainer"]
 layout_mode = 2
 theme = SubResource("Theme_2rob6")
 text = "elo Rating"
-horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer"]
 layout_mode = 2
@@ -483,7 +479,7 @@ size_flags_vertical = 0
 [node name="PlayerOneData" type="HBoxContainer" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData"]
 layout_mode = 2
@@ -493,14 +489,14 @@ alignment = 1
 [node name="PlayerTwoName" type="Label" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("6_hgkfr")
-text = "Username"
-horizontal_alignment = 1
+text = "Waiting for Player..."
+horizontal_alignment = 2
 
 [node name="PlayerTwoRating" type="Label" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/VBoxContainer"]
 layout_mode = 2
 theme = SubResource("Theme_2rob6")
 text = "elo Rating"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
 [node name="PlayerTwoAvatar" type="TextureButton" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData"]
 custom_minimum_size = Vector2(50, 50)
@@ -982,7 +978,7 @@ dialog_autowrap = true
 cancel_button_text = "I'll stay."
 
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/CustomGame" to="." method="_on_custom_game_pressed"]
-[connection signal="pressed" from="Pages/LobbiesPage/VBoxContainer/MarginContainer/ScrollContainer/CenterContainer/LobbyList/LobbyData/Join" to="." method="_on_join_pressed"]
+[connection signal="timeout" from="Pages/LobbiesPage/Timer" to="Pages/LobbiesPage" method="_on_timer_timeout"]
 [connection signal="pressed" from="Pages/LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/CreateLobby" to="Pages" method="_on_create_lobby_pressed"]
 [connection signal="pressed" from="Pages/LobbiesPage/RefreshLobbiesList" to="Pages" method="_on_refresh_lobbies_list_pressed"]
 [connection signal="pressed" from="Pages/LobbiesPage/BackBtn" to="." method="_on_back_btn_pressed"]
