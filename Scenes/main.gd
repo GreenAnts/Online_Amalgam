@@ -5,11 +5,12 @@ extends Control
 @onready var lobby_page = $Pages/LobbyPage
 @onready var profile_page = $Pages/ProfilePage
 @onready var side_panel = $Pages/SidePanel
+@onready var panel_avatar = $Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/CenterContainer/Panel/Avatar
 @onready var pages = $Pages
 @onready var confirm_exit = $ConfirmExit
 @onready var quick_match_fail_confirmation = $QuickMatchFail
 
-var remember_open_page
+var remember_open_page : int = 0
 var pages_options 
 
 # Called when the node enters the scene tree for the first time.
@@ -28,8 +29,7 @@ func _on_back_btn_pressed() -> void:
 	change_page("landing")
 # Hide ProfilePage (FROM: ProfilePage)
 func _on_hide_btn_pressed() -> void:
-	change_page("profile")
-	$Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/Avatar.button_pressed = false
+	panel_avatar.button_pressed = false
 # Toggle Hide/Show ProfilePage (FROM: SideMenu)
 func _on_avatar_toggled(toggled_on: bool) -> void:
 	change_page("profile")
@@ -38,7 +38,7 @@ func change_page(page):
 	lobbies_page.visible = false
 	lobby_page.visible = false
 	landing_page.visible = false
-	profile_page.visible = false
+	#profile_page.visible = false
 	if page == "landing":
 		landing_page.visible = true
 		remember_open_page = 0
@@ -51,6 +51,7 @@ func change_page(page):
 		remember_open_page = 2
 	elif page == "profile":
 		if profile_page.visible == true:
+			profile_page.visible = false
 			pages_options[remember_open_page].visible = true
 		else:
 			profile_page.visible = true

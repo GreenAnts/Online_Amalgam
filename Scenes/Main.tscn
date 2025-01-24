@@ -1189,5 +1189,6 @@ Would you like to create a lobby?"
 [connection signal="toggled" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch" to="Pages" method="_on_start_match_toggled"]
 [connection signal="pressed" from="Pages/ProfilePage/HideBtn" to="." method="_on_hide_btn_pressed"]
 [connection signal="toggled" from="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/CenterContainer/Panel/Avatar" to="." method="_on_avatar_toggled"]
+[connection signal="pressed" from="Pages/SidePanel/VBoxContainer/ButtonSpacer/Exit" to="." method="_on_exit_pressed"]
 [connection signal="confirmed" from="ConfirmExit" to="." method="_on_confirm_exit_confirmed"]
 [connection signal="confirmed" from="QuickMatchFail" to="." method="_on_quick_match_fail_confirmed"]
