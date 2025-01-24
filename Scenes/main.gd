@@ -5,13 +5,16 @@ extends Control
 @onready var lobby_page = $Pages/LobbyPage
 @onready var profile_page = $Pages/ProfilePage
 @onready var side_panel = $Pages/SidePanel
+@onready var pages = $Pages
+@onready var confirm_exit = $ConfirmExit
+@onready var quick_match_fail_confirmation = $QuickMatchFail
 
 var remember_open_page
-var pages 
+var pages_options 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pages = [landing_page, lobbies_page, lobby_page, profile_page, side_panel]
+	pages_options = [landing_page, lobbies_page, lobby_page, profile_page, side_panel]
 	SignalBus.change_pages.connect(change_page)
 
 # # # # # # #
@@ -48,19 +51,28 @@ func change_page(page):
 		remember_open_page = 2
 	elif page == "profile":
 		if profile_page.visible == true:
-			pages[remember_open_page].visible = true
+			pages_options[remember_open_page].visible = true
 		else:
 			profile_page.visible = true
+	# Show the Dialog box for failing to find a automatch
+	elif page == "quick_match_fail":
+		quick_match_fail_confirmation.visible = true
+		landing_page.visible = true
+
 # # # # # # #
 # Exit Game #
 # # # # # # #
 # Exit Confirmation on Exit Button
 func _on_exit_pressed() -> void:
-	$ConfirmationDialog.visible = true
+	confirm_exit.visible = true
 # Exit Confirmation on hotkey (ESC)
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
-		$ConfirmationDialog.visible = true
+		confirm_exit.visible = true
+		quick_match_fail_confirmation.visible = false
 # Exit Game after Confirmation
-func _on_confirmation_dialog_confirmed() -> void:
+func _on_confirm_exit_confirmed() -> void:
 	get_tree().quit()
+# No available Lobbies > agree to create a new lobby
+func _on_quick_match_fail_confirmed() -> void:
+	pages.create_lobby()

@@ -1,7 +1,7 @@
 extends Panel
 
 @onready var user_name = $VBoxContainer/Profile/HBoxContainer/VBoxContainer/Username
-@onready var user_avatar = $VBoxContainer/Profile/HBoxContainer/Avatar
+@onready var user_avatar = $VBoxContainer/Profile/HBoxContainer/CenterContainer/Panel/Avatar
 @onready var top_players = $VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers
 
 var leaderboard_handles: Dictionary = {

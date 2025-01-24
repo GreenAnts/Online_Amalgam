@@ -17,6 +17,8 @@ extends Control
 @onready var player_one_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/PlayerOneAvatar
 @onready var player_two_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/PlayerTwoAvatar
 @onready var start_match = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch
+# Side Panel
+@onready var side_panel = $SidePanel
 # Scenes
 @onready var gameplay_scene = preload("res://Scenes/Gameplay/Gameplay.tscn")
 @onready var lobby_data_scene = preload("res://Scenes/Pages/LobbyData/LobbyData.tscn")
@@ -39,8 +41,8 @@ var automatch : bool = false
 
 # Create Lobby Data > _on_create_lobby_pressed()
 var game_mode : int = 0
-var time_limit : int
-var restrictions : int
+var time_limit : int = 0
+var restrictions : int = 4
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -48,6 +50,9 @@ func _ready() -> void:
 	SignalBus.join_lobby.connect(join_lobby)
 	SignalBus.update_lobby_listings.connect(_get_lobby_list)
 	
+	# Avatar
+	Steam.getPlayerAvatar()
+	Steam.avatar_loaded.connect(_on_loaded_avatar)
 	# Lobbies
 	Steam.join_requested.connect(_on_lobby_join_requested)
 	Steam.lobby_chat_update.connect(_on_lobby_chat_update)
@@ -68,6 +73,31 @@ func _process(_delta) -> void:
 	# If the player is connected, read packets
 	if lobby_id > 0:
 		read_messages()
+
+# Avatar
+func _on_loaded_avatar(user_id: int, avatar_size: int, avatar_buffer: PackedByteArray) -> void:
+	print("Avatar for user: %s" % user_id)
+	print("Size: %s" % avatar_size)
+	# Create the image and texture for loading
+	var avatar_image: Image = Image.create_from_data(avatar_size, avatar_size, false, Image.FORMAT_RGBA8, avatar_buffer)
+	# Optionally resize the image if it is too large
+	if avatar_size > 128:
+		avatar_image.resize(128, 128, Image.INTERPOLATE_LANCZOS)
+	# Apply the image to a texture
+	var avatar_texture: ImageTexture = ImageTexture.create_from_image(avatar_image)
+	# If avatar is players own, assign to panel
+	if user_id ==  Global.steam_id:
+		side_panel.user_avatar.set_texture_normal(avatar_texture)
+	_set_avatars_to_lobby_members(user_id, avatar_texture)
+
+func _set_avatars_to_lobby_members(user_id: int, avatar_texture: ImageTexture) -> void:
+	for member in lobby_members:
+		if member["steam_id"] == user_id:
+			member["avatar"] = avatar_texture
+			if lobby_id > 0 && member["steam_id"] == Global.steam_id:
+				player_one_avatar.set_texture_normal(avatar_texture)
+			elif lobby_id > 0 && member["steam_id"] != Global.steam_id:
+				player_two_avatar.set_texture_normal(avatar_texture)
 
 #############
 #  Lobbies  #
@@ -181,6 +211,7 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 		_get_lobby_list()
 
 func _update_lobby_player_info(this_lobby_id: int):
+	Steam.getPlayerAvatar()
 	player_one_label.text = Global.steam_username
 	if lobby_members.size() > 1:
 		# Loop through all members that aren't you
@@ -212,6 +243,7 @@ func get_lobby_members() -> void:
 		var member_steam_name: String = Steam.getFriendPersonaName(member_steam_id)
 		# Add them to the list
 		lobby_members.append({"steam_id":member_steam_id, "steam_name":member_steam_name})
+		
 
 # A user's information has changed
 func _on_persona_change(this_steam_id: int, _flag: int) -> void:
@@ -285,6 +317,8 @@ func matchmaking_loop() -> void:
 	else:
 		automatch = false
 		print("[STEAM] Failed to automatically match you with a lobby. Please try again.")
+		SignalBus.change_pages.emit("quick_match_fail")
+		
 
 func _automatch_search(lobbies):
 	var attempting_join: bool = false
@@ -325,29 +359,6 @@ func _on_network_messages_session_request(remote_id: int) -> void:
 	# Make the initial handshake
 	make_p2p_handshake()
 
-func read_messages() -> void:
-	var messages: Array = Steam.receiveMessagesOnChannel(0, 1000)
-	for message in messages:
-		if message.is_empty() or message == null:
-			print("WARNING: read an empty message with non-zero size!")
-		else:
-			message.payload = bytes_to_var(message.payload.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP))
-			# Get the remote user's ID
-			var message_sender: int = message['identity']
-			# Print the packet to output
-			print("Message Payload: %s" % message.payload)
-			# ########################################### #
-			# Append logic here to deal with message data.
-			# ########################################### #
-			# Start Timer > Countdown to match start
-			if message.payload['message'] == "start_timer":
-				pass
-			# Stop Timer > abort countdown
-			elif message.payload['message'] == "stop_timer":
-				pass
-			# Start Match > transition to gameplay scene
-			elif message.payload['message'] == "start_match":
-				pass
 
 func send_message(this_target: int, packet_data: Dictionary) -> void:
 	# Set the send_type and channel
@@ -367,6 +378,30 @@ func send_message(this_target: int, packet_data: Dictionary) -> void:
 	# Else send it to someone specific
 	else:
 		Steam.sendMessageToUser(this_target, this_data, send_type, channel)
+
+func read_messages() -> void:
+	var messages: Array = Steam.receiveMessagesOnChannel(0, 1000)
+	for message in messages:
+		if message.is_empty() or message == null:
+			print("WARNING: read an empty message with non-zero size!")
+		else:
+			message.payload = bytes_to_var(message.payload.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP))
+			# Get the remote user's ID
+			var message_sender: int = message['identity']
+			# Print the packet to output
+			print("Message Payload: %s" % message.payload)
+			# ########################################### #
+			# Append logic here to deal with message data.
+			# ########################################### #
+			# Start Timer > Countdown to match start
+			if message.payload['message'] == "start_timer":
+				_set_timer(true)
+			# Stop Timer > abort countdown
+			elif message.payload['message'] == "stop_timer":
+				_set_timer(false)
+			# Start Match > transition to gameplay scene
+			elif message.payload['message'] == "start_match":
+				_start_match()
 
 func _on_network_messages_session_failed(steam_id: int, session_error: int, state: int, debug_msg: String) -> void:
 	print(debug_msg)
