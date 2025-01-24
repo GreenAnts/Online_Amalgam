@@ -1019,52 +1019,56 @@ theme_override_colors/font_color = Color(0.777467, 0.530304, 0.622051, 1)
 theme_override_font_sizes/font_size = 25
 horizontal_alignment = 1
 
-[node name="Leader1" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="TopPlayers" type="VBoxContainer" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "1st: Luigi"
 
-[node name="Leader2" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="Leader1" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "2nd: The Capybara"
+text = "1st:"
 
-[node name="Leader3" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="Leader2" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "3rd: Someone Who Definitely Exists"
+text = "2nd:"
 
-[node name="Leader4" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="Leader3" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "3rd: "
+
+[node name="Leader4" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "4th: "
 
-[node name="Leader5" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="Leader5" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "5th"
 
-[node name="Leader6" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="Leader6" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "6th"
 
-[node name="Leader7" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="Leader7" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "7th"
 
-[node name="Leader8" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="Leader8" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "8th"
 
-[node name="Leader9" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="Leader9" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "9th"
 
-[node name="Leader10" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer"]
+[node name="Leader10" type="Label" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel/MarginContainer/VBoxContainer/TopPlayers"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "10th"

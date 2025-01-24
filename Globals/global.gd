@@ -11,7 +11,6 @@ func _process(delta: float) -> void:
 
 func _ready() -> void:
 	initialize_steam()
-	print(is_on_steam_deck)
 
 func _init() -> void:
 	# Set your game's Steam app ID here
