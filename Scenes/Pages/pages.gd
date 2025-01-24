@@ -16,7 +16,7 @@ extends Control
 @onready var player_two_label = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/VBoxContainer/PlayerTwoName
 @onready var player_one_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/PlayerOneAvatar
 @onready var player_two_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/PlayerTwoAvatar
-@onready var start_match = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch
+@onready var start_match_btn = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch
 # Side Panel
 @onready var side_panel = $SidePanel
 # Scenes
@@ -189,10 +189,10 @@ func _update_lobby_player_info(this_lobby_id: int):
 		for this_member in lobby_members:
 			if this_member['steam_id'] != Global.steam_id:
 				player_two_label.text = this_member['steam_name']
-		start_match.disabled = false
+		start_match_btn.disabled = false
 	else:
 		player_two_label.text = "Waiting for Player..."
-		start_match.disabled = true
+		start_match_btn.disabled = true
 
 func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 	# Get the lobby owner's name
@@ -372,7 +372,7 @@ func read_messages() -> void:
 				_set_timer(false)
 			# Start Match > transition to gameplay scene
 			elif message.payload['message'] == "start_match":
-				_start_match()
+				start_match()
 
 func _on_network_messages_session_failed(steam_id: int, session_error: int, state: int, debug_msg: String) -> void:
 	print(debug_msg)
@@ -480,7 +480,7 @@ func _on_quick_match_pressed() -> void:
 	matchmaking_loop()
 
 func _on_start_timer_timeout() -> void:
-	_start_match()
+	start_match()
 
 ##########################
 #  P2P Triggered Events  #
@@ -497,7 +497,7 @@ func _set_timer(start_or_stop : bool) -> void:
 		lobby_page_send_message.visible = true
 		lobby_page.reset_start_btn()
 	
-func _start_match():
+func start_match():
 	#Exit the Menus and start the match
 	var gameplay = gameplay_scene.instantiate()
 	get_parent().add_child(gameplay)

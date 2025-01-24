@@ -19,6 +19,7 @@ config/icon="res://Media/Images/icon.svg"
 
 Global="*res://Globals/global.gd"
 SignalBus="*res://Globals/signal_bus.gd"
+BoardData="*res://Globals/board_data.gd"
 
 [display]
 

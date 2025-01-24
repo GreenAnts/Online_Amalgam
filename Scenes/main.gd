@@ -21,6 +21,9 @@ func _ready() -> void:
 # # # # # # #
 #  Buttons  #
 # # # # # # #
+# Go to Gameplay (FROM: LandingPage)
+func _on_solo_play_pressed() -> void:
+	pages.start_match()
 # Go to LobbiesPage (FROM: LandingPage)
 func _on_custom_game_pressed() -> void:
 	change_page("lobbies")

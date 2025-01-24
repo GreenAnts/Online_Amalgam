@@ -3,21 +3,21 @@
 [ext_resource type="Script" path="res://Scenes/main.gd" id="1_yyaud"]
 [ext_resource type="Script" path="res://Scenes/Pages/pages.gd" id="2_j5ofv"]
 [ext_resource type="VideoStream" path="res://Media/Videos/44576-439924992.ogv" id="3_3xogp"]
-[ext_resource type="Texture2D" uid="uid://klehfumafvy5" path="res://Media/Images/button.png" id="4_7xusn"]
-[ext_resource type="Texture2D" uid="uid://ckbgrjuu73xn3" path="res://Media/Images/button-select.png" id="5_m86b3"]
+[ext_resource type="Texture2D" uid="uid://klehfumafvy5" path="res://Media/Images/Menu_Assets/button.png" id="4_7xusn"]
+[ext_resource type="Texture2D" uid="uid://ckbgrjuu73xn3" path="res://Media/Images/Menu_Assets/button-select.png" id="5_m86b3"]
 [ext_resource type="Script" path="res://Scenes/Pages/LobbiesPage/lobbies_page.gd" id="6_toq17"]
-[ext_resource type="Texture2D" uid="uid://boihihu2y0vmq" path="res://Media/Images/Reload-White.png" id="7_3w5ke"]
-[ext_resource type="Texture2D" uid="uid://beyl0tofwg8wn" path="res://Media/Images/Reload-White-select.png" id="8_638om"]
-[ext_resource type="Texture2D" uid="uid://dxvb8eg81bsmu" path="res://Media/Images/Back-White.png" id="9_3dgbb"]
-[ext_resource type="Texture2D" uid="uid://bljja67pfhit7" path="res://Media/Images/Back-White-select.png" id="10_a1qvu"]
+[ext_resource type="Texture2D" uid="uid://boihihu2y0vmq" path="res://Media/Images/Menu_Assets/Reload-White.png" id="7_3w5ke"]
+[ext_resource type="Texture2D" uid="uid://beyl0tofwg8wn" path="res://Media/Images/Menu_Assets/Reload-White-select.png" id="8_638om"]
+[ext_resource type="Texture2D" uid="uid://dxvb8eg81bsmu" path="res://Media/Images/Menu_Assets/Back-White.png" id="9_3dgbb"]
+[ext_resource type="Texture2D" uid="uid://bljja67pfhit7" path="res://Media/Images/Menu_Assets/Back-White-select.png" id="10_a1qvu"]
 [ext_resource type="Script" path="res://Scenes/Pages/LobbyPage/lobby_page.gd" id="11_duqne"]
 [ext_resource type="Texture2D" uid="uid://dgvpr1tu3gbrf" path="res://Media/Images/icon.svg" id="12_jg3cd"]
 [ext_resource type="Theme" uid="uid://ghoclswayha" path="res://Media/Themes/ui_default.tres" id="13_noh22"]
 [ext_resource type="Script" path="res://Scenes/Pages/SidePanel/side_panel.gd" id="14_pe4ft"]
-[ext_resource type="Texture2D" uid="uid://cxy0j0bdrwop2" path="res://Media/Images/Setting-White.png" id="15_fn3i0"]
-[ext_resource type="Texture2D" uid="uid://n3w2hmmgihtf" path="res://Media/Images/Setting-White-select.png" id="16_1vsdo"]
-[ext_resource type="Texture2D" uid="uid://d32it1fpa760l" path="res://Media/Images/Power-White.png" id="17_i5sbh"]
-[ext_resource type="Texture2D" uid="uid://b6s7ddyt4vpdl" path="res://Media/Images/Power-White-select.png" id="18_ak1nf"]
+[ext_resource type="Texture2D" uid="uid://cxy0j0bdrwop2" path="res://Media/Images/Menu_Assets/Setting-White.png" id="15_fn3i0"]
+[ext_resource type="Texture2D" uid="uid://n3w2hmmgihtf" path="res://Media/Images/Menu_Assets/Setting-White-select.png" id="16_1vsdo"]
+[ext_resource type="Texture2D" uid="uid://d32it1fpa760l" path="res://Media/Images/Menu_Assets/Power-White.png" id="17_i5sbh"]
+[ext_resource type="Texture2D" uid="uid://b6s7ddyt4vpdl" path="res://Media/Images/Menu_Assets/Power-White-select.png" id="18_ak1nf"]
 
 [sub_resource type="Theme" id="Theme_gtrdx"]
 
@@ -101,7 +101,6 @@ offset_right = -154.0
 offset_bottom = -59.0
 grow_horizontal = 2
 grow_vertical = 0
-disabled = true
 texture_normal = ExtResource("4_7xusn")
 texture_hover = ExtResource("5_m86b3")
 ignore_texture_size = true
@@ -1109,7 +1108,7 @@ layout_mode = 2
 size_flags_vertical = 3
 text = "10th"
 
-[node name="Settings" type="Control" parent="Pages/SidePanel/VBoxContainer"]
+[node name="SettingsContainer" type="Control" parent="Pages/SidePanel/VBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
@@ -1120,7 +1119,7 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 
-[node name="Settings2" type="TextureButton" parent="Pages/SidePanel/VBoxContainer/ButtonSpacer"]
+[node name="Settings" type="TextureButton" parent="Pages/SidePanel/VBoxContainer/ButtonSpacer"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -1176,6 +1175,7 @@ ok_button_text = "Create Lobby"
 dialog_text = "No available matches were found.
 Would you like to create a lobby?"
 
+[connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/SoloPlay" to="." method="_on_solo_play_pressed"]
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/QuickMatch" to="Pages" method="_on_quick_match_pressed"]
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/CustomGame" to="." method="_on_custom_game_pressed"]
 [connection signal="timeout" from="Pages/LobbiesPage/UpdateTimer" to="Pages/LobbiesPage" method="_on_timer_timeout"]
