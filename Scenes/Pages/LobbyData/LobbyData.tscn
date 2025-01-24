@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://beepkj1youmnb"]
 
 [ext_resource type="Texture2D" uid="uid://dgvpr1tu3gbrf" path="res://Media/Images/icon.svg" id="1_37i7w"]
-[ext_resource type="Script" path="res://Scenes/Menus/LobbyData/lobby_data.gd" id="1_gbawb"]
+[ext_resource type="Script" path="res://Scenes/Pages/LobbyData/lobby_data.gd" id="1_gbawb"]
 
 [node name="LobbyData" type="MarginContainer"]
 offset_right = 176.0

@@ -11,13 +11,15 @@ extends Control
 @onready var lobby_page = $LobbyPage
 @onready var lobby_page_chat = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/VBoxContainer/ScrollContainer/MatchLobbyChat
 @onready var lobby_page_message = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/MatchLobbyMessage
+@onready var lobby_page_send_message = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/SendMessage
 @onready var player_one_label = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/VBoxContainer/PlayerOneName
 @onready var player_two_label = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/VBoxContainer/PlayerTwoName
 @onready var player_one_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/PlayerOneAvatar
 @onready var player_two_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/PlayerTwoAvatar
 @onready var start_match = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch
 # Scenes
-@onready var lobby_data_scene = preload("res://Scenes/Menus/LobbyData/LobbyData.tscn")
+@onready var gameplay_scene = preload("res://Scenes/Gameplay/Gameplay.tscn")
+@onready var lobby_data_scene = preload("res://Scenes/Pages/LobbyData/LobbyData.tscn")
 
 const PACKET_READ_LIMIT: int = 32
 
@@ -219,10 +221,6 @@ func _on_persona_change(this_steam_id: int, _flag: int) -> void:
 		# Update the player list
 		get_lobby_members()
 
-func make_p2p_handshake() -> void:
-	print("Sending P2P handshake to the lobby")
-	send_message(0, {"message": "handshake", "from": Global.steam_id})
-
 func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id: int, chat_state: int) -> void:
 	# Get the user who has made the lobby change
 	var changer_name: String = Steam.getFriendPersonaName(change_id)
@@ -314,6 +312,10 @@ func _automatch_search(lobbies):
 #############
 #    P2P    #
 #############
+func make_p2p_handshake() -> void:
+	print("Sending P2P handshake to the lobby")
+	send_message(0, {"message": "handshake", "from": Global.steam_id})
+	
 func _on_network_messages_session_request(remote_id: int) -> void:
 	# Get the requester's name
 	var this_requester: String = Steam.getFriendPersonaName(remote_id)
@@ -334,7 +336,18 @@ func read_messages() -> void:
 			var message_sender: int = message['identity']
 			# Print the packet to output
 			print("Message Payload: %s" % message.payload)
+			# ########################################### #
 			# Append logic here to deal with message data.
+			# ########################################### #
+			# Start Timer > Countdown to match start
+			if message.payload['message'] == "start_timer":
+				pass
+			# Stop Timer > abort countdown
+			elif message.payload['message'] == "stop_timer":
+				pass
+			# Start Match > transition to gameplay scene
+			elif message.payload['message'] == "start_match":
+				pass
 
 func send_message(this_target: int, packet_data: Dictionary) -> void:
 	# Set the send_type and channel
@@ -358,6 +371,21 @@ func send_message(this_target: int, packet_data: Dictionary) -> void:
 func _on_network_messages_session_failed(steam_id: int, session_error: int, state: int, debug_msg: String) -> void:
 	print(debug_msg)
 	
+#########################
+#    P2P-Start Match    #
+#########################
+func _request_set_timer(start_or_stop : bool) -> void:
+	if start_or_stop == true:
+		print("Starting Timer: Counting down until match start")
+		send_message(0, {"message": "start_timer", "from": Global.steam_id})
+	else:
+		print("Stopping Timer: Aborting match start")
+		send_message(0, {"message": "stop_timer", "from": Global.steam_id})
+
+func _request_start_match() -> void:
+	print("Match Starting: Requesting a transition from lobby page to gameplay scene")
+	send_message(0, {"message": "start_match", "from": Global.steam_id})
+
 #############
 #  Buttons  #
 #############
@@ -413,6 +441,15 @@ func _on_leave_lobby_pressed() -> void:
 		await(get_tree().create_timer(1).timeout)
 		_get_lobby_list()
 
+func _on_start_match_toggled(toggled_on: bool) -> void:
+	if toggled_on == true:
+		_request_set_timer(true)
+		_set_timer(true)
+	else:
+		_set_timer(false)
+		_set_timer(false)
+
+
 ####################
 #  Singal-Buttons  #
 ####################
@@ -435,3 +472,27 @@ func _on_quick_match_pressed() -> void:
 	matchmaking_phase = 0
 	# Start the loop!
 	matchmaking_loop()
+
+func _on_start_timer_timeout() -> void:
+	_start_match()
+
+##########################
+#  P2P Triggered Events  #
+##########################
+func _set_timer(start_or_stop : bool) -> void:
+	var start_timer = $LobbyPage/StartTimer
+	start_timer.start()
+	if start_or_stop == true:
+		lobby_page_message.visible = false
+		lobby_page_send_message.visible = false
+	else:
+		start_timer.stop()
+		lobby_page_message.visible = true
+		lobby_page_send_message.visible = true
+		lobby_page.reset_start_btn()
+	
+func _start_match():
+	#Exit the Menus and start the match
+	var gameplay = gameplay_scene.instantiate()
+	get_parent().add_child(gameplay)
+	self.queue_free()

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Online_Amalgam"
-run/main_scene="res://Scenes/Menus/Main.tscn"
+run/main_scene="res://Scenes/Main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://Media/Images/icon.svg"
 

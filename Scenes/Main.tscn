@@ -1,30 +1,31 @@
-[gd_scene load_steps=22 format=3 uid="uid://cqigfn5icyf86"]
+[gd_scene load_steps=23 format=3 uid="uid://cqigfn5icyf86"]
 
-[ext_resource type="Script" path="res://Scenes/Menus/main.gd" id="1_yyaud"]
-[ext_resource type="Script" path="res://Scenes/Menus/pages.gd" id="2_o4qpy"]
-[ext_resource type="VideoStream" path="res://Media/Videos/44576-439924992.ogv" id="2_u0ac2"]
-[ext_resource type="Texture2D" uid="uid://klehfumafvy5" path="res://Media/Images/button.png" id="3_jw2e1"]
-[ext_resource type="Texture2D" uid="uid://ckbgrjuu73xn3" path="res://Media/Images/button-select.png" id="4_rmwec"]
-[ext_resource type="Texture2D" uid="uid://dgvpr1tu3gbrf" path="res://Media/Images/icon.svg" id="5_v67o3"]
-[ext_resource type="Texture2D" uid="uid://boihihu2y0vmq" path="res://Media/Images/Reload-White.png" id="6_f2daj"]
-[ext_resource type="Theme" uid="uid://ghoclswayha" path="res://Media/Themes/ui_default.tres" id="6_hgkfr"]
-[ext_resource type="Script" path="res://Scenes/Menus/LobbiesPage/lobbies_page.gd" id="6_vbm1o"]
-[ext_resource type="Texture2D" uid="uid://cxy0j0bdrwop2" path="res://Media/Images/Setting-White.png" id="7_paw2l"]
-[ext_resource type="Texture2D" uid="uid://beyl0tofwg8wn" path="res://Media/Images/Reload-White-select.png" id="7_pfu67"]
-[ext_resource type="Texture2D" uid="uid://dxvb8eg81bsmu" path="res://Media/Images/Back-White.png" id="8_0ubqc"]
-[ext_resource type="Texture2D" uid="uid://n3w2hmmgihtf" path="res://Media/Images/Setting-White-select.png" id="8_h3ef1"]
-[ext_resource type="Texture2D" uid="uid://d32it1fpa760l" path="res://Media/Images/Power-White.png" id="9_3tg53"]
-[ext_resource type="Texture2D" uid="uid://bljja67pfhit7" path="res://Media/Images/Back-White-select.png" id="9_j7iac"]
-[ext_resource type="Texture2D" uid="uid://b6s7ddyt4vpdl" path="res://Media/Images/Power-White-select.png" id="10_d05od"]
-[ext_resource type="Script" path="res://Scenes/Menus/side_panel.gd" id="12_lh7ea"]
+[ext_resource type="Script" path="res://Scenes/main.gd" id="1_yyaud"]
+[ext_resource type="Script" path="res://Scenes/Pages/pages.gd" id="2_j5ofv"]
+[ext_resource type="VideoStream" path="res://Media/Videos/44576-439924992.ogv" id="3_3xogp"]
+[ext_resource type="Texture2D" uid="uid://klehfumafvy5" path="res://Media/Images/button.png" id="4_7xusn"]
+[ext_resource type="Texture2D" uid="uid://ckbgrjuu73xn3" path="res://Media/Images/button-select.png" id="5_m86b3"]
+[ext_resource type="Script" path="res://Scenes/Pages/LobbiesPage/lobbies_page.gd" id="6_toq17"]
+[ext_resource type="Texture2D" uid="uid://boihihu2y0vmq" path="res://Media/Images/Reload-White.png" id="7_3w5ke"]
+[ext_resource type="Texture2D" uid="uid://beyl0tofwg8wn" path="res://Media/Images/Reload-White-select.png" id="8_638om"]
+[ext_resource type="Texture2D" uid="uid://dxvb8eg81bsmu" path="res://Media/Images/Back-White.png" id="9_3dgbb"]
+[ext_resource type="Texture2D" uid="uid://bljja67pfhit7" path="res://Media/Images/Back-White-select.png" id="10_a1qvu"]
+[ext_resource type="Script" path="res://Scenes/Pages/LobbyPage/lobby_page.gd" id="11_duqne"]
+[ext_resource type="Texture2D" uid="uid://dgvpr1tu3gbrf" path="res://Media/Images/icon.svg" id="12_jg3cd"]
+[ext_resource type="Theme" uid="uid://ghoclswayha" path="res://Media/Themes/ui_default.tres" id="13_noh22"]
+[ext_resource type="Script" path="res://Scenes/Pages/SidePanel/side_panel.gd" id="14_pe4ft"]
+[ext_resource type="Texture2D" uid="uid://cxy0j0bdrwop2" path="res://Media/Images/Setting-White.png" id="15_fn3i0"]
+[ext_resource type="Texture2D" uid="uid://n3w2hmmgihtf" path="res://Media/Images/Setting-White-select.png" id="16_1vsdo"]
+[ext_resource type="Texture2D" uid="uid://d32it1fpa760l" path="res://Media/Images/Power-White.png" id="17_i5sbh"]
+[ext_resource type="Texture2D" uid="uid://b6s7ddyt4vpdl" path="res://Media/Images/Power-White-select.png" id="18_ak1nf"]
 
-[sub_resource type="Theme" id="Theme_w7tka"]
+[sub_resource type="Theme" id="Theme_gtrdx"]
 
-[sub_resource type="Theme" id="Theme_2rob6"]
+[sub_resource type="Theme" id="Theme_hmu4r"]
 
-[sub_resource type="Theme" id="Theme_fs5eo"]
+[sub_resource type="Theme" id="Theme_2grk4"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k0ubx"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w3tl2"]
 bg_color = Color(0.144063, 0.144063, 0.144062, 1)
 border_width_left = 5
 border_width_top = 5
@@ -59,7 +60,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
-script = ExtResource("2_o4qpy")
+script = ExtResource("2_j5ofv")
 
 [node name="LandingPage" type="Control" parent="Pages"]
 layout_mode = 2
@@ -75,7 +76,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
-stream = ExtResource("2_u0ac2")
+stream = ExtResource("3_3xogp")
 autoplay = true
 expand = true
 loop = true
@@ -94,8 +95,8 @@ offset_bottom = -59.0
 grow_horizontal = 2
 grow_vertical = 0
 disabled = true
-texture_normal = ExtResource("3_jw2e1")
-texture_hover = ExtResource("4_rmwec")
+texture_normal = ExtResource("4_7xusn")
+texture_hover = ExtResource("5_m86b3")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -128,9 +129,9 @@ offset_right = 142.0
 offset_bottom = -75.0
 grow_horizontal = 2
 grow_vertical = 0
-theme = SubResource("Theme_w7tka")
-texture_normal = ExtResource("3_jw2e1")
-texture_hover = ExtResource("4_rmwec")
+theme = SubResource("Theme_gtrdx")
+texture_normal = ExtResource("4_7xusn")
+texture_hover = ExtResource("5_m86b3")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -162,8 +163,8 @@ offset_right = 326.0
 offset_bottom = -59.0
 grow_horizontal = 2
 grow_vertical = 0
-texture_normal = ExtResource("3_jw2e1")
-texture_hover = ExtResource("4_rmwec")
+texture_normal = ExtResource("4_7xusn")
+texture_hover = ExtResource("5_m86b3")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -188,9 +189,9 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
-script = ExtResource("6_vbm1o")
+script = ExtResource("6_toq17")
 
-[node name="Timer" type="Timer" parent="Pages/LobbiesPage"]
+[node name="UpdateTimer" type="Timer" parent="Pages/LobbiesPage"]
 wait_time = 16.0
 autostart = true
 
@@ -354,8 +355,8 @@ offset_bottom = 66.0
 grow_horizontal = 0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
-texture_normal = ExtResource("6_f2daj")
-texture_hover = ExtResource("7_pfu67")
+texture_normal = ExtResource("7_3w5ke")
+texture_hover = ExtResource("8_638om")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -372,8 +373,8 @@ offset_bottom = 66.0
 grow_horizontal = 0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
-texture_normal = ExtResource("8_0ubqc")
-texture_hover = ExtResource("9_j7iac")
+texture_normal = ExtResource("9_3dgbb")
+texture_hover = ExtResource("10_a1qvu")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -382,6 +383,11 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
+script = ExtResource("11_duqne")
+
+[node name="StartTimer" type="Timer" parent="Pages/LobbyPage"]
+wait_time = 6.0
+one_shot = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Pages/LobbyPage"]
 layout_mode = 1
@@ -439,7 +445,7 @@ theme_override_constants/separation = 20
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 3
-texture_normal = ExtResource("5_v67o3")
+texture_normal = ExtResource("12_jg3cd")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -450,12 +456,12 @@ alignment = 1
 
 [node name="PlayerOneName" type="Label" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/VBoxContainer"]
 layout_mode = 2
-theme = ExtResource("6_hgkfr")
+theme = ExtResource("13_noh22")
 text = "Username"
 
 [node name="PlayerOneRating" type="Label" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/VBoxContainer"]
 layout_mode = 2
-theme = SubResource("Theme_2rob6")
+theme = SubResource("Theme_hmu4r")
 text = "elo Rating"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer"]
@@ -506,13 +512,13 @@ alignment = 1
 
 [node name="PlayerTwoName" type="Label" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/VBoxContainer"]
 layout_mode = 2
-theme = ExtResource("6_hgkfr")
+theme = ExtResource("13_noh22")
 text = "Waiting for Player..."
 horizontal_alignment = 2
 
 [node name="PlayerTwoRating" type="Label" parent="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/VBoxContainer"]
 layout_mode = 2
-theme = SubResource("Theme_2rob6")
+theme = SubResource("Theme_hmu4r")
 text = "elo Rating"
 horizontal_alignment = 2
 
@@ -520,7 +526,7 @@ horizontal_alignment = 2
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 3
-texture_normal = ExtResource("5_v67o3")
+texture_normal = ExtResource("12_jg3cd")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -572,6 +578,7 @@ text = "Leave Lobby"
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 3
+toggle_mode = true
 text = "Start Match"
 
 [node name="ProfilePage" type="Control" parent="Pages"]
@@ -617,7 +624,7 @@ horizontal_alignment = 1
 [node name="Label2" type="TextureRect" parent="Pages/ProfilePage/VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
-texture = ExtResource("5_v67o3")
+texture = ExtResource("12_jg3cd")
 stretch_mode = 5
 
 [node name="Label3" type="Label" parent="Pages/ProfilePage/VBoxContainer/HBoxContainer/VBoxContainer2"]
@@ -865,15 +872,15 @@ offset_top = 16.0
 offset_right = -16.0
 offset_bottom = 80.0
 grow_horizontal = 0
-texture_normal = ExtResource("8_0ubqc")
-texture_hover = ExtResource("9_j7iac")
+texture_normal = ExtResource("9_3dgbb")
+texture_hover = ExtResource("10_a1qvu")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="SidePanel" type="Panel" parent="Pages"]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("12_lh7ea")
+script = ExtResource("14_pe4ft")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Pages/SidePanel"]
 layout_mode = 1
@@ -921,7 +928,7 @@ alignment = 1
 
 [node name="Username" type="Label" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme = ExtResource("6_hgkfr")
+theme = ExtResource("13_noh22")
 theme_override_font_sizes/font_size = 20
 text = "Username"
 horizontal_alignment = 2
@@ -932,12 +939,12 @@ alignment = 2
 
 [node name="RatinIcon" type="TextureRect" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("5_v67o3")
+texture = ExtResource("12_jg3cd")
 expand_mode = 3
 
 [node name="Rating" type="Label" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-theme = SubResource("Theme_fs5eo")
+theme = SubResource("Theme_2grk4")
 theme_override_font_sizes/font_size = 15
 text = "1000"
 horizontal_alignment = 2
@@ -948,12 +955,12 @@ alignment = 2
 
 [node name="PointsIcon" type="TextureRect" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-texture = ExtResource("5_v67o3")
+texture = ExtResource("12_jg3cd")
 expand_mode = 3
 
 [node name="Points" type="Label" parent="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-theme = SubResource("Theme_fs5eo")
+theme = SubResource("Theme_2grk4")
 theme_override_font_sizes/font_size = 15
 text = "100"
 horizontal_alignment = 2
@@ -963,7 +970,7 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
-texture_normal = ExtResource("5_v67o3")
+texture_normal = ExtResource("12_jg3cd")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -989,7 +996,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_k0ubx")
+theme_override_styles/panel = SubResource("StyleBoxFlat_w3tl2")
 
 [node name="MarginContainer" type="MarginContainer" parent="Pages/SidePanel/VBoxContainer/MarginContainer/Leaderboards/Panel"]
 layout_mode = 1
@@ -1097,8 +1104,8 @@ offset_right = -72.0
 offset_bottom = -24.0
 grow_horizontal = 0
 grow_vertical = 0
-texture_normal = ExtResource("7_paw2l")
-texture_hover = ExtResource("8_h3ef1")
+texture_normal = ExtResource("15_fn3i0")
+texture_hover = ExtResource("16_1vsdo")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -1115,8 +1122,8 @@ offset_right = -32.0
 offset_bottom = -24.0
 grow_horizontal = 0
 grow_vertical = 0
-texture_normal = ExtResource("9_3tg53")
-texture_hover = ExtResource("10_d05od")
+texture_normal = ExtResource("17_i5sbh")
+texture_hover = ExtResource("18_ak1nf")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -1135,14 +1142,15 @@ cancel_button_text = "I'll stay."
 
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/QuickMatch" to="Pages" method="_on_quick_match_pressed"]
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/CustomGame" to="." method="_on_custom_game_pressed"]
-[connection signal="timeout" from="Pages/LobbiesPage/Timer" to="Pages/LobbiesPage" method="_on_timer_timeout"]
+[connection signal="timeout" from="Pages/LobbiesPage/UpdateTimer" to="Pages/LobbiesPage" method="_on_timer_timeout"]
 [connection signal="pressed" from="Pages/LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/CreateLobby" to="Pages" method="_on_create_lobby_pressed"]
 [connection signal="pressed" from="Pages/LobbiesPage/RefreshLobbiesList" to="Pages" method="_on_refresh_lobbies_list_pressed"]
 [connection signal="pressed" from="Pages/LobbiesPage/BackBtn" to="." method="_on_back_btn_pressed"]
+[connection signal="timeout" from="Pages/LobbyPage/StartTimer" to="Pages" method="_on_start_timer_timeout"]
 [connection signal="gui_input" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/MatchLobbyMessage" to="Pages" method="_on_match_lobby_message_gui_input"]
 [connection signal="pressed" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/SendMessage" to="Pages" method="_on_send_message_pressed"]
 [connection signal="pressed" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/LeaveLobby" to="Pages" method="_on_leave_lobby_pressed"]
+[connection signal="toggled" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch" to="Pages" method="_on_start_match_toggled"]
 [connection signal="pressed" from="Pages/ProfilePage/HideBtn" to="." method="_on_hide_btn_pressed"]
 [connection signal="toggled" from="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/Avatar" to="." method="_on_avatar_toggled"]
-[connection signal="pressed" from="Pages/SidePanel/VBoxContainer/ButtonSpacer/Exit" to="." method="_on_exit_pressed"]
 [connection signal="confirmed" from="ConfirmationDialog" to="." method="_on_confirmation_dialog_confirmed"]

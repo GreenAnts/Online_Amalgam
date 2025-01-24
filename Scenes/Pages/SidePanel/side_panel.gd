@@ -31,8 +31,8 @@ func _on_leaderboard_find_result(handle: int, found: int) -> void:
 func _on_leaderboard_score_uploaded(success: int, this_handle: int, this_score: Dictionary) -> void:
 	if success == 1:
 		print("Successfully uploaded scores!")
-		print(this_score['score']) # the new score as it stands
-		print(this_score['score_changed']) # if the score was changed (0 if false, 1 if true)
+		#print(this_score['score']) # the new score as it stands
+		#print(this_score['score_changed']) # if the score was changed (0 if false, 1 if true)
 		#print(this_score['new_rank']) # the new global rank of this player
 		#print(this_score['prev_rank']) # the previous rank of this player
 		# Add additional logic to use other variables passed back
