@@ -128,12 +128,13 @@ func _intersection_clicked(intersection : Vector2) -> void:
 
 # Move a piece from one intersection to the other
 func _move_piece(from_intersection, to_intersection):
-	# Move the piece
-	BoardData.piece_dict[from_intersection].global_position = BoardData.board_dict[to_intersection].global_position + intersection_offset
-	# Set the NEW coordinates and node into the piece_dict 
-	BoardData.piece_dict[to_intersection] = BoardData.piece_dict[from_intersection]
-	# Erase the OLD coordinates and node from piece_dict
-	BoardData.piece_dict.erase(from_intersection)
+	if BoardData.piece_dict.has(from_intersection):
+		# Move the piece
+		BoardData.piece_dict[from_intersection].global_position = BoardData.board_dict[to_intersection].global_position + intersection_offset
+		# Set the NEW coordinates and node into the piece_dict 
+		BoardData.piece_dict[to_intersection] = BoardData.piece_dict[from_intersection]
+		# Erase the OLD coordinates and node from piece_dict
+		BoardData.piece_dict.erase(from_intersection)
 	
 ###################
 #  Adding Pieces  #
