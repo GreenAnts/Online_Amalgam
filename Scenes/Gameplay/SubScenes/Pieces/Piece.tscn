@@ -1,0 +1,153 @@
+[gd_scene load_steps=17 format=3 uid="uid://3d1xtmd0cdm1"]
+
+[ext_resource type="Texture2D" uid="uid://by2thjfrhbir6" path="res://Media/Images/Primary_Assets/Pieces/Ruby_Circle.png" id="1_7dxvh"]
+[ext_resource type="Texture2D" uid="uid://b2h6jv122fbpp" path="res://Media/Images/Primary_Assets/Pieces/Pearl_Circle.png" id="2_vjktu"]
+[ext_resource type="Texture2D" uid="uid://wc1hl265weuc" path="res://Media/Images/Primary_Assets/Pieces/Amber_Circle.png" id="3_68e3k"]
+[ext_resource type="Texture2D" uid="uid://chf7a533ujunl" path="res://Media/Images/Primary_Assets/Pieces/Jade_Circle.png" id="4_q07xm"]
+[ext_resource type="Texture2D" uid="uid://l66jirn8ws17" path="res://Media/Images/Primary_Assets/Pieces/Amalgam_Circle.png" id="5_ybr3o"]
+[ext_resource type="Texture2D" uid="uid://deuo5uemeb5gi" path="res://Media/Images/Primary_Assets/Pieces/Void_Circle.png" id="6_imtu1"]
+[ext_resource type="Texture2D" uid="uid://pjur8py82ojg" path="res://Media/Images/Primary_Assets/Pieces/Portal_Circle.png" id="7_f05il"]
+[ext_resource type="Texture2D" uid="uid://bag8pq7ae3dep" path="res://Media/Images/Primary_Assets/Pieces/Ruby_Square.png" id="8_qmeoq"]
+[ext_resource type="Texture2D" uid="uid://fhaiwomkoehk" path="res://Media/Images/Primary_Assets/Pieces/Pearl_Square.png" id="9_8sqw3"]
+[ext_resource type="Texture2D" uid="uid://bfjpabj2kn0u5" path="res://Media/Images/Primary_Assets/Pieces/Amber_Square.png" id="10_nn5uk"]
+[ext_resource type="Texture2D" uid="uid://ekwh2016wv35" path="res://Media/Images/Primary_Assets/Pieces/Jade_Square.png" id="11_ghvkn"]
+[ext_resource type="Texture2D" uid="uid://h0abppy7u5py" path="res://Media/Images/Primary_Assets/Pieces/Amalgam_Square.png" id="12_hyqqn"]
+[ext_resource type="Texture2D" uid="uid://2me57qypn4wy" path="res://Media/Images/Primary_Assets/Pieces/Void_Square.png" id="13_ykfb7"]
+[ext_resource type="Texture2D" uid="uid://dtatc4yornaly" path="res://Media/Images/Primary_Assets/Pieces/Portal_Square.png" id="14_wh8yp"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2pcxm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_7dxvh")
+}],
+"loop": true,
+"name": &"1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vjktu")
+}],
+"loop": true,
+"name": &"2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_68e3k")
+}],
+"loop": true,
+"name": &"3",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_q07xm")
+}],
+"loop": true,
+"name": &"4",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_ybr3o")
+}],
+"loop": true,
+"name": &"5",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_imtu1")
+}],
+"loop": true,
+"name": &"6",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_f05il")
+}],
+"loop": true,
+"name": &"7",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ec703"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_qmeoq")
+}],
+"loop": true,
+"name": &"1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_8sqw3")
+}],
+"loop": true,
+"name": &"2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_nn5uk")
+}],
+"loop": true,
+"name": &"3",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_ghvkn")
+}],
+"loop": true,
+"name": &"4",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("12_hyqqn")
+}],
+"loop": true,
+"name": &"5",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_ykfb7")
+}],
+"loop": true,
+"name": &"6",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_wh8yp")
+}],
+"loop": true,
+"name": &"7",
+"speed": 5.0
+}]
+
+[node name="Piece" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Circle" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.03, 0.03)
+sprite_frames = SubResource("SpriteFrames_2pcxm")
+animation = &"7"
+
+[node name="Square" type="AnimatedSprite2D" parent="."]
+visible = false
+scale = Vector2(0.03, 0.03)
+sprite_frames = SubResource("SpriteFrames_ec703")
+animation = &"7"

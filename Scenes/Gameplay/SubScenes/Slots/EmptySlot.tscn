@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2hfbucfpq1ua"]
+
+[ext_resource type="Script" path="res://Scenes/Gameplay/SubScenes/Slots/intersection_slot.gd" id="1_allvh"]
+
+[node name="EmptySlot" type="Control"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_default_cursor_shape = 2
+script = ExtResource("1_allvh")
