@@ -101,7 +101,7 @@ func _intersection_clicked(intersection : Vector2) -> void:
 			# Add piece for your own piece type at the clicked intersection
 			_add_piece(player_side, selected_piece_to_add, intersection)
 			# Set Turn-Data
-			turn_data['add'] = [selected_piece_to_add, intersection]
+			turn_data['add'] = [player_side, selected_piece_to_add, intersection]
 #=-*-=#=-* Click Piece *-=#=-*-=#
 	elif BoardData.piece_dict.has(intersection):
 		# Check the gamerules for clicking on another piece
@@ -154,11 +154,13 @@ func _add_piece(player : int, piece_type: int, intersection : Vector2) -> void:
 	pieces_container.add_child(new_piece)
 	# Make the position equal to the intersection button node plus the offset to center it.
 	new_piece.global_position = BoardData.board_dict[intersection].global_position + intersection_offset
-	# Reset the selector variable.
-	selected_piece_to_add = NONE
-	# Ensure buttons are untoggled.
-	_untoggle_selector_btns(NONE)
-	BoardData.piece_dict[intersection] = new_piece
+	#if the function was not called form a networking signal
+	if player == player_side:
+		# Reset the selector variable.
+		selected_piece_to_add = NONE
+		# Ensure buttons are untoggled.
+		_untoggle_selector_btns(NONE)
+		BoardData.piece_dict[intersection] = new_piece
 
 ######################
 #  Selector-Buttons  #
@@ -234,6 +236,8 @@ func _receive_turn_data(data : Dictionary) -> void:
 	else:
 		player = CIRCLES
 	if data["add"] != null:
+		#arg1 > player | arg2 > piece_type | arg3 > location
 		_add_piece(player, data["add"][0], data["add"][1])
 	if data["move"] != null:
+		#arg1 > From_Pos | arg2 > To_Pos
 		_move_piece(data["move"][0], data["add"][1])
