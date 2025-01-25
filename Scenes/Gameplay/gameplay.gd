@@ -47,6 +47,10 @@ func _ready() -> void:
 	elif game_mode == "Standard":
 		var standard = standard_scene.instantiate()
 		add_child(standard)
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	# If the player is connected, read packets
+		SendData.read_messages()
 
 ##########################
 #  Setting up the Board  #
@@ -111,6 +115,7 @@ func _add_piece(piece_type: int, intersection : Vector2) -> void:
 	selected_piece_to_add = NONE
 	# Ensure buttons are untoggled.
 	_untoggle_selector_btns(NONE)
+	_send_turn_data(turn_data)
 
 ######################
 #  Selector-Buttons  #

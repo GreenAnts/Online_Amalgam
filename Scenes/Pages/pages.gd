@@ -190,7 +190,7 @@ func _update_lobby_player_info(this_lobby_id: int):
 		for this_member in lobby_members:
 			if this_member['steam_id'] != Global.steam_id:
 				player_two_label.text = this_member['steam_name']
-				opponent_id = this_member['steam_name']
+				opponent_id = this_member['steam_id']
 		start_match_btn.disabled = false
 	else:
 		player_two_label.text = "Waiting for Player..."
