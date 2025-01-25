@@ -9,8 +9,8 @@ extends Control
 #  Import Scripts   #
 # # # # # # # # # # #
 # Logic for Game Modes
-@onready var sandbox_scene = preload("res://Scenes/Gameplay/GameMode/Sandbox/Sandbox.tscn")
-@onready var standard_scene = preload("res://Scenes/Gameplay/GameMode/Standard/Standard.tscn")
+const sandbox_script = preload("res://Scenes/Gameplay/GameMode/Sandbox/sandbox.gd")
+const standard_script = preload("res://Scenes/Gameplay/GameMode/Standard/standard.gd")
 # Networking GodotSteam
 	# Class > NetworkingHandler
 
@@ -20,7 +20,9 @@ extends Control
 @onready var board_grid = $TextureRect/BoardGrid
 
 # Gamemode Selected (passed from previous scene)
-var game_mode : String = "Sandbox" # Default Mode
+var game_mode : String = "sandbox" # Default Mode
+var game_rules # Will be the script for the correct ruleset to use
+
 # Player is Squares or Circles (passed from previous scene)
 enum {CIRCLES, SQUARES}
 var player_side : int = CIRCLES
@@ -42,12 +44,13 @@ func _ready() -> void:
 	###################
 	#  Set Game Mode  #
 	###################
-	if game_mode == "Sandbox":
-		var sandbox = sandbox_scene.instantiate()
-		add_child(sandbox)
-	elif game_mode == "Standard":
-		var standard = standard_scene.instantiate()
-		add_child(standard)
+	if game_mode == "sandbox":
+		# Load sandbox rules
+		game_rules = load("res://Scenes/Gameplay/GameMode/Sandbox/sandbox.gd").new()
+	elif game_mode == "standard":
+		# Load standard rules
+		game_rules = load("res://Scenes/Gameplay/GameMode/Standard/standard.gd").new()
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	# If the player is connected, read packets
@@ -88,16 +91,54 @@ func create_intersection_slot(xcor, ycor):
 #  Handle Clicked Intersection  #
 #################################
 enum {NONE, RUBY, PEARL, AMBER, JADE, AMALGAM, VOID, PORTAL}
+var last_clicked_piece # Vector2 or NULL
 
 func _intersection_clicked(intersection : Vector2) -> void:
+#=-*-=#=-* Add Piece *-=#=-*-=#
 	if selected_piece_to_add != NONE:
-		#add piece for your own piece type at the clicked intersection
-		_add_piece(selected_piece_to_add, intersection, player_side)
+		# Validate the piece can be added based off the current game rules.
+		if game_rules.validate_add_piece(player_side, selected_piece_to_add, intersection) == true:
+			# Add piece for your own piece type at the clicked intersection
+			_add_piece(player_side, selected_piece_to_add, intersection)
+			# Set Turn-Data
+			turn_data['add'] = [selected_piece_to_add, intersection]
+#=-*-=#=-* Click Piece *-=#=-*-=#
+	elif BoardData.piece_dict.has(intersection):
+		# Check the gamerules for clicking on another piece
+		var check = game_rules.check_clicked_piece(player_side, last_clicked_piece, intersection)
+		# if the rules return an intersection...
+		if check != null:
+			# Set the "last_clicked_piece" variable with the node of the clicked piece
+			last_clicked_piece = check
+			print(last_clicked_piece)
+	# Ensure the "last_clicked_piece" variable has a piece node set
+#=-*-=#=-* Move Piece  *-=#=-*-=#
+	elif last_clicked_piece != null:
+		if game_rules.check_empty_intersection(player_side, last_clicked_piece, intersection):
+			# Move the piece
+			_move_piece(last_clicked_piece, intersection)
+			# Reset the variable
+			last_clicked_piece = null
+			# Set Turn-Data
+			turn_data['move'] = [last_clicked_piece, intersection]
+	# Send the data
+	_send_turn_data(turn_data)
+	# Reset Turn-Data
+	reset_turn_data()
 
+# Move a piece from one intersection to the other
+func _move_piece(from_intersection, to_intersection):
+	# Move the piece
+	BoardData.piece_dict[from_intersection].global_position = BoardData.board_dict[to_intersection].global_position + intersection_offset
+	# Set the NEW coordinates and node into the piece_dict 
+	BoardData.piece_dict[to_intersection] = BoardData.piece_dict[from_intersection]
+	# Erase the OLD coordinates and node from piece_dict
+	BoardData.piece_dict.erase(from_intersection)
+	
 ###################
 #  Adding Pieces  #
 ###################
-func _add_piece(piece_type: int, intersection : Vector2, player : int) -> void:
+func _add_piece(player : int, piece_type: int, intersection : Vector2) -> void:
 	var new_piece = piece_scene.instantiate()
 	if player == CIRCLES:
 		# Make the correct node visible for Circles.
@@ -117,13 +158,8 @@ func _add_piece(piece_type: int, intersection : Vector2, player : int) -> void:
 	selected_piece_to_add = NONE
 	# Ensure buttons are untoggled.
 	_untoggle_selector_btns(NONE)
-	# If you added the piece yourself > send the data to the opponent.
-	if player == player_side:
-		# Set data to send to opponent
-		turn_data['add'] = [piece_type, intersection]
-		# Send the data
-		_send_turn_data(turn_data)
-	
+	BoardData.piece_dict[intersection] = new_piece
+
 ######################
 #  Selector-Buttons  #
 ######################
@@ -198,4 +234,6 @@ func _receive_turn_data(data : Dictionary) -> void:
 	else:
 		player = CIRCLES
 	if data["add"] != null:
-		_add_piece(data["add"][0], data["add"][1], player)
+		_add_piece(player, data["add"][0], data["add"][1])
+	if data["move"] != null:
+		_move_piece(data["move"][0], data["add"][1])

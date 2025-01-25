@@ -254,3 +254,5 @@ var square_starting_pos_dict := {
 	Vector2(6,-7): true, Vector2(6,-8): true, Vector2(6,-9): true, Vector2(6,-10): true,
 	Vector2(7,-8): true, Vector2(7,-9): true
 }
+# Dictionary to hold all pieces on the board
+var piece_dict := {}
