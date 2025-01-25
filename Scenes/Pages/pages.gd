@@ -68,7 +68,9 @@ func _ready() -> void:
 	check_command_line()
 
 func _process(_delta) -> void:
-	pass
+	# If the player is connected, read packets
+	if lobby_id > 0:
+		read_messages()
 
 #############
 #  Lobbies  #
