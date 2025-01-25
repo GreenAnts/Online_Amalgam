@@ -101,7 +101,7 @@ func _intersection_clicked(intersection : Vector2) -> void:
 			# Add piece for your own piece type at the clicked intersection
 			_add_piece(player_side, selected_piece_to_add, intersection)
 			# Set Turn-Data
-			turn_data['add'] = [player_side, selected_piece_to_add, intersection]
+			turn_data['add'] = [selected_piece_to_add, intersection]
 #=-*-=#=-* Click Piece *-=#=-*-=#
 	elif BoardData.piece_dict.has(intersection):
 		# Check the gamerules for clicking on another piece
@@ -240,4 +240,4 @@ func _receive_turn_data(data : Dictionary) -> void:
 		_add_piece(player, data["add"][0], data["add"][1])
 	if data["move"] != null:
 		#arg1 > From_Pos | arg2 > To_Pos
-		_move_piece(data["move"][0], data["add"][1])
+		_move_piece(data["move"][0], data["move"][1])
