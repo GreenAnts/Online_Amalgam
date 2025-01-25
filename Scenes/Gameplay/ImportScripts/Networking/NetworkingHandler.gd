@@ -1,13 +1,13 @@
 extends Node
 
-class_name SendData
+class_name NetworkingHandler
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# P2P
 	Steam.network_messages_session_request.connect(_on_network_messages_session_request)
 	Steam.network_messages_session_failed.connect(_on_network_messages_session_failed)
-
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
@@ -52,8 +52,8 @@ static func read_messages() -> void:
 			# ########################################### #
 			# Append logic here to deal with message data.
 			# ########################################### #
-			if message.payload['message'] != null:
-				print(message.payload['message'])
+			print(message.payload)
+			SignalBus.received_turn_data.emit(message.payload)
 
 static func _on_network_messages_session_failed(steam_id: int, session_error: int, state: int, debug_msg: String) -> void:
 	print(debug_msg)

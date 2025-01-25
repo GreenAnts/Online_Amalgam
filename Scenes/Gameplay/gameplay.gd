@@ -12,7 +12,7 @@ extends Control
 @onready var sandbox_scene = preload("res://Scenes/Gameplay/GameMode/Sandbox/Sandbox.tscn")
 @onready var standard_scene = preload("res://Scenes/Gameplay/GameMode/Standard/Standard.tscn")
 # Networking GodotSteam
-	# Class > SendData
+	# Class > NetworkingHandler
 
 
 @onready var piece_selector_container = $PieceSelectors
@@ -38,6 +38,7 @@ func _ready() -> void:
 	#  SignaLS  #
 	#############
 	SignalBus.intersection_clicked.connect(_intersection_clicked)
+	SignalBus.received_turn_data.connect(_receive_turn_data)
 	###################
 	#  Set Game Mode  #
 	###################
@@ -50,7 +51,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	# If the player is connected, read packets
-		SendData.read_messages()
+		NetworkingHandler.read_messages()
 
 ##########################
 #  Setting up the Board  #
@@ -90,19 +91,20 @@ enum {NONE, RUBY, PEARL, AMBER, JADE, AMALGAM, VOID, PORTAL}
 
 func _intersection_clicked(intersection : Vector2) -> void:
 	if selected_piece_to_add != NONE:
-		_add_piece(selected_piece_to_add, intersection)
+		#add piece for your own piece type at the clicked intersection
+		_add_piece(selected_piece_to_add, intersection, player_side)
 
 ###################
 #  Adding Pieces  #
 ###################
-func _add_piece(piece_type: int, intersection : Vector2) -> void:
+func _add_piece(piece_type: int, intersection : Vector2, player : int) -> void:
 	var new_piece = piece_scene.instantiate()
-	if player_side == CIRCLES:
+	if player == CIRCLES:
 		# Make the correct node visible for Circles.
 		new_piece.get_node("Circle").visible = true
 		# Each animation is a different piece. Animation name is a number correlating to the ENUM.
 		new_piece.get_node("Circle").play(str(piece_type))
-	elif player_side == SQUARES:
+	elif player == SQUARES:
 		# Make the correct node visible for Circles.
 		new_piece.get_node("Square").visible = true
 		# Each animation is a different piece. Animation name is a number correlating to the ENUM.
@@ -115,8 +117,13 @@ func _add_piece(piece_type: int, intersection : Vector2) -> void:
 	selected_piece_to_add = NONE
 	# Ensure buttons are untoggled.
 	_untoggle_selector_btns(NONE)
-	_send_turn_data(turn_data)
-
+	# If you added the piece yourself > send the data to the opponent.
+	if player == player_side:
+		# Set data to send to opponent
+		turn_data['add'] = [piece_type, intersection]
+		# Send the data
+		_send_turn_data(turn_data)
+	
 ######################
 #  Selector-Buttons  #
 ######################
@@ -175,7 +182,20 @@ func _untoggle_selector_btns(piece : int) -> void:
 #################################
 #  Send Turn-Data Over Network  #
 #################################
-var turn_data : Dictionary = {"message" : [Vector2(0,0), Vector2(1,1)]}
+var turn_data : Dictionary = { "add" : null, "move" : null, "ability" : null }
 
+func reset_turn_data():
+	turn_data = { "add" : null, "move" : null, "ability" : null }
+	
 func _send_turn_data(data : Dictionary) -> void:
-	SendData.send_message_to_opponent(opponent_id, turn_data)
+	NetworkingHandler.send_message_to_opponent(opponent_id, turn_data)
+	
+func _receive_turn_data(data : Dictionary) -> void:
+	var player
+	#Send the data for the opposite piece type of your own.
+	if player_side == CIRCLES:
+		player = SQUARES
+	else:
+		player = CIRCLES
+	if data["add"] != null:
+		_add_piece(data["add"][0], data["add"][1], player)

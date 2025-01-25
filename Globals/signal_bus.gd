@@ -13,3 +13,5 @@ signal update_lobby_listings()
 ##############
 # Intersections
 signal intersection_clicked(coordinates : Vector2)
+# Read P2P Turn-Data Sent
+signal received_turn_data(data : Dictionary)
