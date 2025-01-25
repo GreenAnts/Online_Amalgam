@@ -27,6 +27,9 @@ var player_side : int = CIRCLES
 
 var intersection_offset : Vector2 = Vector2(20,20)
 
+# Player Data
+var opponent_id : int
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Setup Board Intersections
@@ -165,5 +168,9 @@ func _untoggle_selector_btns(piece : int) -> void:
 			button.button_pressed = false
 
 #################################
-#  Send Turn Data Over Network  #
+#  Send Turn-Data Over Network  #
 #################################
+var turn_data : Dictionary = {"message" : [Vector2(0,0), Vector2(1,1)]}
+
+func _send_turn_data(data : Dictionary) -> void:
+	SendData.send_message_to_opponent(opponent_id, turn_data)

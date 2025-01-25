@@ -27,6 +27,7 @@ const PACKET_READ_LIMIT: int = 32
 
 var lobby_data
 var lobby_id: int = 0
+var opponent_id : int
 var lobby_members: Array = []
 var lobby_members_max: int = 2
 var matchmaking_phase: int = 0
@@ -189,6 +190,7 @@ func _update_lobby_player_info(this_lobby_id: int):
 		for this_member in lobby_members:
 			if this_member['steam_id'] != Global.steam_id:
 				player_two_label.text = this_member['steam_name']
+				opponent_id = this_member['steam_name']
 		start_match_btn.disabled = false
 	else:
 		player_two_label.text = "Waiting for Player..."
@@ -500,5 +502,6 @@ func _set_timer(start_or_stop : bool) -> void:
 func start_match():
 	#Exit the Menus and start the match
 	var gameplay = gameplay_scene.instantiate()
+	gameplay.opponent_id = opponent_id
 	get_parent().add_child(gameplay)
 	self.queue_free()
