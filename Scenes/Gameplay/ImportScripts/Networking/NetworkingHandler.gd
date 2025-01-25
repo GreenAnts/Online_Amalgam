@@ -52,8 +52,11 @@ static func read_messages() -> void:
 			# ########################################### #
 			# Append logic here to deal with message data.
 			# ########################################### #
-			print(message.payload)
-			SignalBus.received_turn_data.emit(message.payload)
+			if message.payload['message'] != null:
+				print(message.payload)
+				#SignalBus.received_turn_data.emit(message.payload['message'])
+			elif message.payload['move'] != null:
+				SignalBus.received_turn_data.emit(message.payload)
 
 static func _on_network_messages_session_failed(steam_id: int, session_error: int, state: int, debug_msg: String) -> void:
 	print(debug_msg)
