@@ -1182,7 +1182,7 @@ Would you like to create a lobby?"
 [connection signal="pressed" from="Pages/LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/CreateLobby" to="Pages/LobbiesPage" method="_on_create_lobby_pressed"]
 [connection signal="pressed" from="Pages/LobbiesPage/RefreshLobbiesList" to="Pages" method="_on_refresh_lobbies_list_pressed"]
 [connection signal="pressed" from="Pages/LobbiesPage/BackBtn" to="." method="_on_back_btn_pressed"]
-[connection signal="timeout" from="Pages/LobbyPage/StartTimer" to="Pages" method="_on_start_timer_timeout"]
+[connection signal="timeout" from="Pages/LobbyPage/StartTimer" to="Pages/LobbyPage" method="_on_start_timer_timeout"]
 [connection signal="gui_input" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/MatchLobbyMessage" to="Pages/LobbyPage" method="_on_match_lobby_message_gui_input"]
 [connection signal="pressed" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/SendMessage" to="Pages/LobbyPage" method="_on_send_message_pressed"]
 [connection signal="pressed" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/LeaveLobby" to="Pages/LobbyPage" method="_on_leave_lobby_pressed"]

@@ -68,7 +68,7 @@ func _on_start_match_toggled(toggled_on: bool) -> void:
 
 # Timer Setting
 func set_timer(start_or_stop : bool) -> void:
-	var start_timer = $LobbyPage/StartTimer
+	var start_timer = $StartTimer
 	start_timer.start()
 	if start_or_stop == true:
 		message.visible = false
@@ -82,9 +82,7 @@ func set_timer(start_or_stop : bool) -> void:
 func reset_start_btn():
 	start_btn.text = ("Start Match")
 	start_btn.modulate = Color("ffffff")
-	
-func _on_start_timer_timeout() -> void:
-	start_match()
+
 
 # Actually Start the Match
 func start_match():
@@ -93,9 +91,12 @@ func start_match():
 	# maybe "get_tree()"?
 	# Add Gameplay Scene
 	var gameplay = Global.gameplay_scene.instantiate()
-	get_parent().get_parent().add_child(gameplay)
+	self.get_parent().get_parent().add_child(gameplay)
 	#Remove the Pages Scene
-	get_parent().queue_free()
+	self.get_parent().queue_free()
+	
+func _on_start_timer_timeout() -> void:
+	_request_start_match()
 
 func _on_send_message_pressed() -> void:
 	# Get the entered chat message with username attached
