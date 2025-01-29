@@ -86,17 +86,20 @@ func reset_start_btn():
 
 # Actually Start the Match
 func start_match():
+	print("starting the match")
 	# Exit the Menus and start the match
 	# Probably not the best way to do this. I'll look into it more later. Maybe search from the top down...start at root?
 	# maybe "get_tree()"?
 	# Add Gameplay Scene
 	var gameplay = Global.gameplay_scene.instantiate()
 	self.get_parent().get_parent().add_child(gameplay)
+	print(get_parent().get_parent())
 	#Remove the Pages Scene
 	self.get_parent().queue_free()
 	
 func _on_start_timer_timeout() -> void:
 	_request_start_match()
+	start_match()
 
 func _on_send_message_pressed() -> void:
 	# Get the entered chat message with username attached

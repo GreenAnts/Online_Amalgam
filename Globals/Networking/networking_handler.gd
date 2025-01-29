@@ -342,15 +342,17 @@ func read_messages() -> void:
 			# ########################################### #
 			# Append logic here to deal with message data.
 			# ########################################### #
-			# Start Timer > Countdown to match start
-			if message.payload['message'] == "start_timer":
-				SignalBus.set_timer.emit(true)
-			# Stop Timer > abort countdown
-			elif message.payload['message'] == "stop_timer":
-				SignalBus.set_timer.emit(false)
-			# Start Match > transition to gameplay scene
-			elif message.payload['message'] == "start_match":
-				SignalBus.start_match.emit()
+			# Messages During a Lobby
+			if message.payload.has('message'):
+				# Start Timer > Countdown to match start
+				if message.payload['message'] == "start_timer":
+					SignalBus.set_timer.emit(true)
+				# Stop Timer > abort countdown
+				elif message.payload['message'] == "stop_timer":
+					SignalBus.set_timer.emit(false)
+				# Start Match > transition to gameplay scene
+				elif message.payload['message'] == "start_match":
+					SignalBus.start_match.emit()
 			else:
 				SignalBus.received_turn_data.emit(message.payload)
 

@@ -215,8 +215,11 @@ func _on_portal_btn_toggled(toggled_on: bool) -> void:
 func _untoggle_selector_btns(piece : int) -> void:
 	# Loop through all Selector Buttons
 	for button in piece_selector_container.get_children():
-		# If the button is not the corresponding piece passed into the function, unpress it.
-		if button != piece_selector_container.get_child(piece - 1):
+		if piece != NONE:
+			# If the button is not the corresponding piece passed into the function, unpress it.
+			if button != piece_selector_container.get_child(piece - 1):
+				button.button_pressed = false
+		else:
 			button.button_pressed = false
 
 #################################
