@@ -52,4 +52,4 @@ func _ready() -> void:
 	rank_label.text = str(user_rank)
 
 func _on_join_lobby_pressed() -> void:
-	SignalBus.join_lobby.emit(int(id))
+	NetworkingHandler.join_lobby(int(id))

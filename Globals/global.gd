@@ -6,6 +6,8 @@ var is_owned: bool
 var steam_id: int
 var steam_username: String
 
+@onready var gameplay_scene = preload("res://Scenes/Gameplay/Gameplay.tscn")
+
 func _process(delta: float) -> void:
 	Steam.run_callbacks()
 

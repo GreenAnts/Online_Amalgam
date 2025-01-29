@@ -18,12 +18,18 @@ func _ready() -> void:
 	pages_options = [landing_page, lobbies_page, lobby_page, profile_page, side_panel]
 	SignalBus.change_pages.connect(change_page)
 
+func start_match():
+	#Exit the Menus and start the match
+	var gameplay = Global.gameplay_scene.instantiate()
+	self.add_child(gameplay)
+	pages.queue_free()
+
 # # # # # # #
 #  Buttons  #
 # # # # # # #
 # Go to Gameplay (FROM: LandingPage)
 func _on_solo_play_pressed() -> void:
-	pages.start_match()
+	start_match()
 # Go to LobbiesPage (FROM: LandingPage)
 func _on_custom_game_pressed() -> void:
 	change_page("lobbies")
@@ -79,4 +85,4 @@ func _on_confirm_exit_confirmed() -> void:
 	get_tree().quit()
 # No available Lobbies > agree to create a new lobby
 func _on_quick_match_fail_confirmed() -> void:
-	pages.create_lobby()
+	NetworkingHandler.create_lobby()

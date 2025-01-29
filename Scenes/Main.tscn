@@ -1,7 +1,7 @@
 [gd_scene load_steps=24 format=3 uid="uid://cqigfn5icyf86"]
 
 [ext_resource type="Script" path="res://Scenes/main.gd" id="1_yyaud"]
-[ext_resource type="Script" path="res://Scenes/Pages/pages.gd" id="2_j5ofv"]
+[ext_resource type="Script" path="res://Scenes/Pages/LandingPage/landing_page.gd" id="2_aw8yn"]
 [ext_resource type="VideoStream" path="res://Media/Videos/44576-439924992.ogv" id="3_3xogp"]
 [ext_resource type="Texture2D" uid="uid://klehfumafvy5" path="res://Media/Images/Menu_Assets/button.png" id="4_7xusn"]
 [ext_resource type="Texture2D" uid="uid://ckbgrjuu73xn3" path="res://Media/Images/Menu_Assets/button-select.png" id="5_m86b3"]
@@ -67,12 +67,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
-script = ExtResource("2_j5ofv")
 
 [node name="LandingPage" type="Control" parent="Pages"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
+script = ExtResource("2_aw8yn")
 
 [node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="Pages/LandingPage"]
 layout_mode = 1
@@ -1176,17 +1176,17 @@ dialog_text = "No available matches were found.
 Would you like to create a lobby?"
 
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/SoloPlay" to="." method="_on_solo_play_pressed"]
-[connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/QuickMatch" to="Pages" method="_on_quick_match_pressed"]
+[connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/QuickMatch" to="Pages/LandingPage" method="_on_quick_match_pressed"]
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/CustomGame" to="." method="_on_custom_game_pressed"]
 [connection signal="timeout" from="Pages/LobbiesPage/UpdateTimer" to="Pages/LobbiesPage" method="_on_timer_timeout"]
-[connection signal="pressed" from="Pages/LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/CreateLobby" to="Pages" method="_on_create_lobby_pressed"]
+[connection signal="pressed" from="Pages/LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/CreateLobby" to="Pages/LobbiesPage" method="_on_create_lobby_pressed"]
 [connection signal="pressed" from="Pages/LobbiesPage/RefreshLobbiesList" to="Pages" method="_on_refresh_lobbies_list_pressed"]
 [connection signal="pressed" from="Pages/LobbiesPage/BackBtn" to="." method="_on_back_btn_pressed"]
 [connection signal="timeout" from="Pages/LobbyPage/StartTimer" to="Pages" method="_on_start_timer_timeout"]
-[connection signal="gui_input" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/MatchLobbyMessage" to="Pages" method="_on_match_lobby_message_gui_input"]
-[connection signal="pressed" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/SendMessage" to="Pages" method="_on_send_message_pressed"]
-[connection signal="pressed" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/LeaveLobby" to="Pages" method="_on_leave_lobby_pressed"]
-[connection signal="toggled" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch" to="Pages" method="_on_start_match_toggled"]
+[connection signal="gui_input" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/MatchLobbyMessage" to="Pages/LobbyPage" method="_on_match_lobby_message_gui_input"]
+[connection signal="pressed" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/SendMessage" to="Pages/LobbyPage" method="_on_send_message_pressed"]
+[connection signal="pressed" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/LeaveLobby" to="Pages/LobbyPage" method="_on_leave_lobby_pressed"]
+[connection signal="toggled" from="Pages/LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch" to="Pages/LobbyPage" method="_on_start_match_toggled"]
 [connection signal="pressed" from="Pages/ProfilePage/HideBtn" to="." method="_on_hide_btn_pressed"]
 [connection signal="toggled" from="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/CenterContainer/Panel/Avatar" to="." method="_on_avatar_toggled"]
 [connection signal="pressed" from="Pages/SidePanel/VBoxContainer/ButtonSpacer/Exit" to="." method="_on_exit_pressed"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=22 format=3 uid="uid://dnddyqxkhgcw1"]
 
-[ext_resource type="Script" path="res://Scenes/Pages/pages.gd" id="1_1b5yr"]
+[ext_resource type="Script" path="res://Scenes/Pages/LandingPage/landing_page.gd" id="1_ub32r"]
 [ext_resource type="VideoStream" path="res://Media/Videos/44576-439924992.ogv" id="2_axmkh"]
 [ext_resource type="Texture2D" uid="uid://klehfumafvy5" path="res://Media/Images/Menu_Assets/button.png" id="3_0vgks"]
 [ext_resource type="Texture2D" uid="uid://ckbgrjuu73xn3" path="res://Media/Images/Menu_Assets/button-select.png" id="4_hnfyc"]
@@ -49,12 +49,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
-script = ExtResource("1_1b5yr")
 
 [node name="LandingPage" type="Control" parent="."]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
+script = ExtResource("1_ub32r")
 
 [node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="LandingPage"]
 layout_mode = 1
@@ -174,7 +175,6 @@ theme_override_font_sizes/font_size = 12
 text = "CUSTOM GAME"
 
 [node name="LobbiesPage" type="Control" parent="."]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
@@ -1116,12 +1116,12 @@ texture_hover = ExtResource("17_mc8x3")
 ignore_texture_size = true
 stretch_mode = 5
 
-[connection signal="pressed" from="LandingPage/VideoStreamPlayer/QuickMatch" to="." method="_on_quick_match_pressed"]
+[connection signal="pressed" from="LandingPage/VideoStreamPlayer/QuickMatch" to="LandingPage" method="_on_quick_match_pressed"]
 [connection signal="timeout" from="LobbiesPage/UpdateTimer" to="LobbiesPage" method="_on_timer_timeout"]
 [connection signal="pressed" from="LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/CreateLobby" to="." method="_on_create_lobby_pressed"]
 [connection signal="pressed" from="LobbiesPage/RefreshLobbiesList" to="." method="_on_refresh_lobbies_list_pressed"]
 [connection signal="timeout" from="LobbyPage/StartTimer" to="." method="_on_start_timer_timeout"]
-[connection signal="gui_input" from="LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/MatchLobbyMessage" to="." method="_on_match_lobby_message_gui_input"]
+[connection signal="gui_input" from="LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/MatchLobbyMessage" to="LobbyPage" method="_on_match_lobby_message_gui_input"]
 [connection signal="pressed" from="LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/SendMessage" to="." method="_on_send_message_pressed"]
 [connection signal="pressed" from="LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/LeaveLobby" to="." method="_on_leave_lobby_pressed"]
-[connection signal="toggled" from="LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch" to="." method="_on_start_match_toggled"]
+[connection signal="toggled" from="LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch" to="LobbyPage" method="_on_start_match_toggled"]

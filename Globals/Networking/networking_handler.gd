@@ -1,26 +1,5 @@
 extends Control
 
-# Lobbies (List) Nodes
-@onready var lobbies_page = $LobbiesPage
-@onready var no_lobby_notice = $LobbiesPage/VBoxContainer/MarginContainer/NoLobbyNotice
-@onready var lobby_list = $LobbiesPage/VBoxContainer/MarginContainer/ScrollContainer/CenterContainer/LobbyList
-@onready var game_mode_options = $LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/HBoxContainer/GameModeOptions
-@onready var restrictions_options = $LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/HBoxContainer/RestrictionsOptions
-@onready var time_options = $LobbiesPage/VBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer/HBoxContainer/TimeOptions
-# Lobby Nodes
-@onready var lobby_page = $LobbyPage
-@onready var lobby_page_chat = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/VBoxContainer/ScrollContainer/MatchLobbyChat
-@onready var lobby_page_message = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/MatchLobbyMessage
-@onready var lobby_page_send_message = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/SendMessage
-@onready var player_one_label = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/VBoxContainer/PlayerOneName
-@onready var player_two_label = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/VBoxContainer/PlayerTwoName
-@onready var player_one_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Control/PlayerOneData/PlayerOneAvatar
-@onready var player_two_avatar = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer2/Control/PlayerOneData/PlayerTwoAvatar
-@onready var start_match_btn = $LobbyPage/HBoxContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer2/StartMatch
-# Side Panel
-@onready var side_panel = $SidePanel
-# Scenes
-@onready var gameplay_scene = preload("res://Scenes/Gameplay/Gameplay.tscn")
 @onready var lobby_data_scene = preload("res://Scenes/Pages/LobbyData/LobbyData.tscn")
 
 const PACKET_READ_LIMIT: int = 32
@@ -31,9 +10,11 @@ var opponent_id : int
 var lobby_members: Array = []
 var lobby_members_max: int = 2
 var matchmaking_phase: int = 0
-var lobby_vote_kick: bool = false
 # are you automatching?
 var automatch : bool = false
+
+# Not Yet Used.
+#		var lobby_vote_kick: bool = false
 
 # Steam ID
 # > Global.steam_id
@@ -48,8 +29,7 @@ var restrictions : int = 4
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Connect signals from SignalBus Global
-	SignalBus.join_lobby.connect(join_lobby)
-	SignalBus.update_lobby_listings.connect(_get_lobby_list)
+	SignalBus.update_lobby_listings.connect(get_lobby_list)
 	
 	# Lobbies
 	Steam.join_requested.connect(_on_lobby_join_requested)
@@ -75,6 +55,15 @@ func _process(_delta) -> void:
 #############
 #  Lobbies  #
 #############
+
+# From LobbyData Button
+func join_lobby(this_lobby_id: int) -> void:
+	print("Attempting to join lobby %s" % lobby_id)
+	# Clear any previous lobby members lists, if you were in a previous lobby
+	lobby_members.clear()
+	# Make the lobby join request to Steam
+	Steam.joinLobby(this_lobby_id)
+
 func check_command_line() -> void:
 	var these_arguments: Array = OS.get_cmdline_args()
 	# There are arguments to process
@@ -110,19 +99,19 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
 		print("Allowing Steam to be relay backup: %s" % set_relay)
 
-func _get_lobby_list() -> void:
+func get_lobby_list() -> void:
 	# Set distance to worldwide
 	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_WORLDWIDE)
 	print("Requesting a lobby list")
+	add_lobby_list_filter()
 	Steam.requestLobbyList()
 
-func _clear_lobby_list():
-	for lobby in lobby_list.get_children():
-		lobby.queue_free()
-
+func add_lobby_list_filter():
+	Steam.addRequestLobbyListStringFilter("game", "Amalgam", Steam.LOBBY_COMPARISON_EQUAL)
+	
 func _on_lobby_match_list(these_lobbies: Array) -> void:
 	# clear the list of lobby from the scene
-	_clear_lobby_list()
+	SignalBus.clear_lobbies.emit()
 	if automatch == true:
 		_automatch_search(these_lobbies)
 	else:
@@ -135,15 +124,15 @@ func _on_lobby_match_list(these_lobbies: Array) -> void:
 				var lobby_restrictions: String = Steam.getLobbyData(this_lobby, "restrictions")
 				# Get the current number of members
 				var lobby_num_members: int = Steam.getNumLobbyMembers(this_lobby)
-				# Create a button for the lobby
+				# Instatiate the LobbyData to then be added to the List of lobbies
 				var lobby_data = lobby_data_scene.instantiate()
 				lobby_data.game_mode = lobby_game_mode
 				lobby_data.username = lobby_name
 				lobby_data.time_limit = lobby_time_limit
 				lobby_data.restrictions = lobby_restrictions
 				lobby_data.id = this_lobby
-				# Add the new lobby to the list
-				lobby_list.add_child(lobby_data)
+				# Signal is sent to the lobbies page to add_child
+				SignalBus.add_lobby_data.emit(lobby_data)
 
 func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, response: int) -> void:
 	# If joining was successful
@@ -155,15 +144,12 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 		get_lobby_members()
 		# Make the initial handshake
 		make_p2p_handshake()
-		_update_lobby_player_info(this_lobby_id)
-		# Change from lobby list to match lobby
-		lobbies_page.visible = false
-		lobby_page.visible = true
+		SignalBus.update_lobby_player_info.emit(this_lobby_id)
 		# Join Message into match lobby chat
 		var join_message = Label.new()
 		join_message.text = ("%s has joined the lobby" % str(Global.steam_username))
 		join_message.modulate = Color("0000ff")
-		lobby_page_chat.add_child(join_message)
+		SignalBus.add_chat_message.emit(join_message)
 	# Else it failed for some reason
 	else:
 		# Get the failure reason
@@ -181,20 +167,7 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 			Steam.CHAT_ROOM_ENTER_RESPONSE_YOU_BLOCKED_MEMBER: fail_reason = "A user you have blocked is in the lobby."
 		print("Failed to join this chat room: %s" % fail_reason)
 		#Reopen the lobby list
-		_get_lobby_list()
-
-func _update_lobby_player_info(this_lobby_id: int):
-	player_one_label.text = Global.steam_username
-	if lobby_members.size() > 1:
-		# Loop through all members that aren't you
-		for this_member in lobby_members:
-			if this_member['steam_id'] != Global.steam_id:
-				player_two_label.text = this_member['steam_name']
-				opponent_id = this_member['steam_id']
-		start_match_btn.disabled = false
-	else:
-		player_two_label.text = "Waiting for Player..."
-		start_match_btn.disabled = true
+		get_lobby_list()
 
 func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 	# Get the lobby owner's name
@@ -235,40 +208,42 @@ func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id:
 		var message = Label.new()
 		message.text = "%s has joined the lobby." % changer_name
 		message.modulate = Color("00ff22")
-		lobby_page_chat.add_child(message)
+		SignalBus.add_chat_message.emit(message)
 	# Else if a player has left the lobby
 	elif chat_state == Steam.CHAT_MEMBER_STATE_CHANGE_LEFT:
 		print("%s has left the lobby." % changer_name)
 		var message = Label.new()
 		message.text = "%s has left the lobby." % changer_name
 		message.modulate = Color("ff0000")
-		lobby_page_chat.add_child(message)
+		SignalBus.add_chat_message.emit(message)
 	# Else if a player has been kicked
 	elif chat_state == Steam.CHAT_MEMBER_STATE_CHANGE_KICKED:
 		print("%s has been kicked from the lobby." % changer_name)
 		var message = Label.new()
 		message.text = "%s has been kicked from the lobby." % changer_name
 		message.modulate = Color("8f00ff")
-		lobby_page_chat.add_child(message)
+		SignalBus.add_chat_message.emit(message)
 	# Else if a player has been banned
 	elif chat_state == Steam.CHAT_MEMBER_STATE_CHANGE_BANNED:
 		print("%s has been banned from the lobby." % changer_name)
 		var message = Label.new()
 		message.text = "%s has been banned from the lobby." % changer_name
 		message.modulate = Color("ef224b")
-		lobby_page_chat.add_child(message)
+		SignalBus.add_chat_message.emit(message)
 	# Else there was some unknown change
 	else:
 		print("%s did... something." % changer_name)
-	# Update the lobby now that a change has occurred
-	get_lobby_members()
-	_update_lobby_player_info(this_lobby_id)
+	# If the player is still in a lobby
+	if lobby_id > 0:
+		# Update the lobby now that a change has occurred
+		get_lobby_members()
+		SignalBus.update_lobby_player_info.emit(this_lobby_id)
 
 func _on_lobby_message(this_lobby_id: int, user: int, buffer: String, chat_type: int) -> void:
 	print("Message Recieved")
 	var message = Label.new()
 	message.text = buffer
-	lobby_page_chat.add_child(message)
+	SignalBus.add_chat_message.emit(message)
 	
 ####################
 #    Auto Match    #
@@ -286,6 +261,7 @@ func matchmaking_loop() -> void:
 		# Set the distance filter
 		Steam.addRequestLobbyListDistanceFilter(matchmaking_phase)
 		# Request a list
+		add_lobby_list_filter()
 		Steam.requestLobbyList()
 	else:
 		automatch = false
@@ -368,140 +344,15 @@ func read_messages() -> void:
 			# ########################################### #
 			# Start Timer > Countdown to match start
 			if message.payload['message'] == "start_timer":
-				_set_timer(true)
+				SignalBus.set_timer.emit(true)
 			# Stop Timer > abort countdown
 			elif message.payload['message'] == "stop_timer":
-				_set_timer(false)
+				SignalBus.set_timer.emit(false)
 			# Start Match > transition to gameplay scene
 			elif message.payload['message'] == "start_match":
-				start_match()
+				SignalBus.start_match.emit()
+			else:
+				SignalBus.received_turn_data.emit(message.payload)
 
 func _on_network_messages_session_failed(steam_id: int, session_error: int, state: int, debug_msg: String) -> void:
 	print(debug_msg)
-	
-#########################
-#    P2P-Start Match    #
-#########################
-func _request_set_timer(start_or_stop : bool) -> void:
-	if start_or_stop == true:
-		print("Starting Timer: Counting down until match start")
-		send_message(0, {"message": "start_timer", "from": Global.steam_id})
-	else:
-		print("Stopping Timer: Aborting match start")
-		send_message(0, {"message": "stop_timer", "from": Global.steam_id})
-
-func _request_start_match() -> void:
-	print("Match Starting: Requesting a transition from lobby page to gameplay scene")
-	send_message(0, {"message": "start_match", "from": Global.steam_id})
-
-#############
-#  Buttons  #
-#############
-func _on_create_lobby_pressed() -> void:
-	game_mode = game_mode_options.button_pressed
-	# restrictions and time_limit: Value based on order of item index in button
-	restrictions = restrictions_options.selected
-	# Time Limits: 0, 5, 10, 15, 20, 30
-	time_limit = time_options.selected
-	create_lobby()
-
-func _on_refresh_lobbies_list_pressed() -> void:
-	_get_lobby_list()
-	lobbies_page.timer.stop()
-	lobbies_page.timer.start()
-
-
-func _on_send_message_pressed() -> void:
-	# Get the entered chat message with username attached
-	var this_message: String = lobby_page_message.get_text()
-	# If there is even a message
-	if this_message.strip_edges().length() > 0:
-		# Pass the message to Steam
-		var was_sent: bool = Steam.sendLobbyChatMsg(lobby_id, str(Global.steam_username) + ": " + this_message)
-		# Was it sent successfully?
-		if not was_sent:
-			print("ERROR: Chat message failed to send.")
-	# Clear the chat input
-	lobby_page_message.clear()
-
-func _on_leave_lobby_pressed() -> void:
-	# If in a lobby, leave it
-	if lobby_id != 0:
-		# Send leave request to Steam
-		Steam.leaveLobby(lobby_id)
-		# Wipe the Steam lobby ID then display the default lobby ID and player list title
-		lobby_id = 0
-		# Close session with all users
-		for this_member in lobby_members:
-			# Make sure this isn't your Steam ID
-			if this_member['steam_id'] != Global.steam_id:
-				# Close the P2P session
-				Steam.closeP2PSessionWithUser(this_member['steam_id'])
-		# Clear the local lobby list
-		lobby_members.clear()
-		for child in lobby_page_chat.get_children():
-			child.queue_free()
-		# Hide outdated lobbies listed
-		_clear_lobby_list()
-		# Change pages from LobbyPage to the LobbiesPage via signal to main.gd
-		SignalBus.change_pages.emit("lobbies")
-		# Refresh list of other lobbies available
-		await(get_tree().create_timer(1).timeout)
-		_get_lobby_list()
-
-func _on_start_match_toggled(toggled_on: bool) -> void:
-	if toggled_on == true:
-		_request_set_timer(true)
-		_set_timer(true)
-	else:
-		_set_timer(false)
-		_set_timer(false)
-
-
-####################
-#  Singal-Buttons  #
-####################
-# Via Signal from LobbyData JoinLobby Button
-func join_lobby(this_lobby_id: int) -> void:
-	print("Attempting to join lobby %s" % lobby_id)
-	# Clear any previous lobby members lists, if you were in a previous lobby
-	lobby_members.clear()
-	# Make the lobby join request to Steam
-	Steam.joinLobby(this_lobby_id)
-
-func _on_match_lobby_message_gui_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_text_completion_accept"):
-		get_viewport().set_input_as_handled()
-		_on_send_message_pressed()
-
-func _on_quick_match_pressed() -> void:
-	automatch = true
-	# Set the matchmaking process to start over
-	matchmaking_phase = 0
-	# Start the loop!
-	matchmaking_loop()
-
-func _on_start_timer_timeout() -> void:
-	start_match()
-
-##########################
-#  P2P Triggered Events  #
-##########################
-func _set_timer(start_or_stop : bool) -> void:
-	var start_timer = $LobbyPage/StartTimer
-	start_timer.start()
-	if start_or_stop == true:
-		lobby_page_message.visible = false
-		lobby_page_send_message.visible = false
-	else:
-		start_timer.stop()
-		lobby_page_message.visible = true
-		lobby_page_send_message.visible = true
-		lobby_page.reset_start_btn()
-	
-func start_match():
-	#Exit the Menus and start the match
-	var gameplay = gameplay_scene.instantiate()
-	gameplay.opponent_id = opponent_id
-	get_parent().add_child(gameplay)
-	self.queue_free()

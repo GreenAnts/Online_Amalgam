@@ -228,7 +228,7 @@ func reset_turn_data():
 	turn_data = { "add" : null, "move" : null, "ability" : null }
 	
 func _send_turn_data(data : Dictionary) -> void:
-	NetworkingHandler.send_message_to_opponent(opponent_id, turn_data)
+	NetworkingHandler.send_message(opponent_id, turn_data)
 	
 func _receive_turn_data(data : Dictionary) -> void:
 	var player
