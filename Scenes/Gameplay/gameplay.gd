@@ -259,7 +259,7 @@ func reset_all() -> void:
 	Global.clicked_animations = []
 
 func abandon() -> void:
-	NetworkingHandler.send_message(opponent_id, {"abandon" : "true"})
+	NetworkingHandler.send_message(opponent_id, {"abandon" : str(opponent_id)})
 	
 func winner(label_msg) -> void:
 	var message = Label.new()
