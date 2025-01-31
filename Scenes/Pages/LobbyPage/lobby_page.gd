@@ -146,12 +146,12 @@ func _on_leave_lobby_pressed() -> void:
 func _request_set_timer(start_or_stop : bool) -> void:
 	if start_or_stop == true:
 		print("Starting Timer: Counting down until match start")
-		NetworkingHandler.send_message(0, {"message": "start_timer", "from": Global.steam_id})
+		NetworkingHandler.send_message(0, {"timer": "start_timer", "from": Global.steam_id})
 	else:
 		print("Stopping Timer: Aborting match start")
-		NetworkingHandler.send_message(0, {"message": "stop_timer", "from": Global.steam_id})
+		NetworkingHandler.send_message(0, {"timer": "stop_timer", "from": Global.steam_id})
 
 # Actually start match
 func _request_start_match() -> void:
 	print("Match Starting: Requesting a transition from lobby page to gameplay scene")
-	NetworkingHandler.send_message(0, {"message": "start_match", "from": Global.steam_id})
+	NetworkingHandler.send_message(0, {"start_match": "", "from": Global.steam_id})

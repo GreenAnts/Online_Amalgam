@@ -23,9 +23,7 @@ const standard_script = preload("res://Scenes/Gameplay/GameMode/Standard/standar
 @onready var chat = $ChatContainer/ChatScrollContainer/GameplayChat
 @onready var message = $ChatContainer/VBoxContainer/GameplayMessage
 
-# Gamemode Selected (passed from previous scene)
-var game_mode : String = "sandbox" # Default Mode
-var game_rules # Will be the script for the correct ruleset to use
+var game_rules # Will be the script for the correct ruleset to use (in on_ready function)
 
 # Player is Squares or Circles (passed from previous scene)
 enum {CIRCLES, SQUARES}
@@ -50,10 +48,10 @@ func _ready() -> void:
 	###################
 	#  Set Game Mode  #
 	###################
-	if game_mode == "sandbox":
+	if Global.game_mode == "sandbox":
 		# Load sandbox rules
 		game_rules = load("res://Scenes/Gameplay/GameMode/Sandbox/sandbox.gd").new()
-	elif game_mode == "standard":
+	elif Global.game_mode == "standard":
 		# Load standard rules
 		game_rules = load("res://Scenes/Gameplay/GameMode/Standard/standard.gd").new()
 

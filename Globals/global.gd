@@ -1,5 +1,6 @@
 extends Node
 
+# Steam
 var is_on_steam_deck: bool
 var is_online: bool
 var is_owned: bool
@@ -8,9 +9,12 @@ var steam_username: String
 
 # Offset for centering things on the board intersections
 var intersection_offset : Vector2 = Vector2(20,20)
-
 # Stores the animation for clicks
 var clicked_animations : Array = []
+
+# Gameplay Settings
+var game_mode = "sandbox"
+var time_limit = ""
 
 @onready var gameplay_scene = preload("res://Scenes/Gameplay/Gameplay.tscn")
 

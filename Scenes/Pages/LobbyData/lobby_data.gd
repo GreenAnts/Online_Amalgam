@@ -52,4 +52,6 @@ func _ready() -> void:
 	rank_label.text = str(user_rank)
 
 func _on_join_lobby_pressed() -> void:
+	Global.game_mode = game_mode
+	Global.time_limit = time_limit
 	NetworkingHandler.join_lobby(int(id))
