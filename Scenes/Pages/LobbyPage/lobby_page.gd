@@ -92,10 +92,9 @@ func start_match():
 	# maybe "get_tree()"?
 	# Add Gameplay Scene
 	var gameplay = Global.gameplay_scene.instantiate()
-	self.get_parent().get_parent().add_child(gameplay)
-	print(get_parent().get_parent())
-	#Remove the Pages Scene
-	self.get_parent().queue_free()
+	self.get_parent().get_parent().get_node("Gameplay").add_child(gameplay)
+	# Change visibility of scenes
+	SignalBus.change_pages.emit("lobbies")
 	
 func _on_start_timer_timeout() -> void:
 	_request_start_match()

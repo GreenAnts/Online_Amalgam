@@ -27,8 +27,6 @@ var game_rules # Will be the script for the correct ruleset to use
 enum {CIRCLES, SQUARES}
 var player_side : int = CIRCLES
 
-var intersection_offset : Vector2 = Vector2(20,20)
-
 # Player Data
 var opponent_id : int
 
@@ -130,7 +128,7 @@ func _intersection_clicked(intersection : Vector2) -> void:
 func _move_piece(from_intersection, to_intersection):
 	if BoardData.piece_dict.has(from_intersection):
 		# Move the piece
-		BoardData.piece_dict[from_intersection].global_position = BoardData.board_dict[to_intersection].global_position + intersection_offset
+		BoardData.piece_dict[from_intersection].global_position = BoardData.board_dict[to_intersection].global_position + Global.intersection_offset
 		# Set the NEW coordinates and node into the piece_dict 
 		BoardData.piece_dict[to_intersection] = BoardData.piece_dict[from_intersection]
 		# Erase the OLD coordinates and node from piece_dict
@@ -154,7 +152,7 @@ func _add_piece(player : int, piece_type: int, intersection : Vector2) -> void:
 	# Add the Piece to the scene in the correct container node
 	pieces_container.add_child(new_piece)
 	# Make the position equal to the intersection button node plus the offset to center it.
-	new_piece.global_position = BoardData.board_dict[intersection].global_position + intersection_offset
+	new_piece.global_position = BoardData.board_dict[intersection].global_position + Global.intersection_offset
 	# Add piece to the piece_dict 
 	BoardData.piece_dict[intersection] = new_piece
 	# If the function was not called form a networking signal
@@ -246,3 +244,8 @@ func _receive_turn_data(data : Dictionary) -> void:
 	if data["move"] != null:
 		#arg1 > From_Pos | arg2 > To_Pos
 		_move_piece(data["move"][0], data["move"][1])
+
+func reset_all() -> void:
+	# Ensure all data is reset for a new game
+	BoardData.piece_dict = {}
+	Global.clicked_animations = []

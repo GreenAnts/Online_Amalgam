@@ -1161,12 +1161,22 @@ title = "Leaving the Game..."
 initial_position = 2
 size = Vector2i(450, 219)
 always_on_top = true
-ok_button_text = "Bye Bye!"
+ok_button_text = "Exit Game"
 dialog_text = "“You have your way. I have my way. As for the right way, the correct way, and the only way, it does not exist.”
 
 ― Friedrich Nietzsche"
 dialog_autowrap = true
-cancel_button_text = "I'll stay."
+
+[node name="ConfirmLeaveMatch" type="ConfirmationDialog" parent="."]
+auto_translate_mode = 1
+title = "Abandoning Match..."
+initial_position = 2
+size = Vector2i(400, 159)
+always_on_top = true
+ok_button_text = "Leave Anyways"
+dialog_text = "You are about to leave a game in progress. Are you sure you want to leave?"
+dialog_autowrap = true
+cancel_button_text = "Keep Playing"
 
 [node name="QuickMatchFail" type="ConfirmationDialog" parent="."]
 initial_position = 1
@@ -1174,6 +1184,16 @@ size = Vector2i(314, 116)
 ok_button_text = "Create Lobby"
 dialog_text = "No available matches were found.
 Would you like to create a lobby?"
+
+[node name="GameplayWrapper" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/SoloPlay" to="." method="_on_solo_play_pressed"]
 [connection signal="pressed" from="Pages/LandingPage/VideoStreamPlayer/QuickMatch" to="Pages/LandingPage" method="_on_quick_match_pressed"]
@@ -1191,4 +1211,5 @@ Would you like to create a lobby?"
 [connection signal="toggled" from="Pages/SidePanel/VBoxContainer/Profile/HBoxContainer/CenterContainer/Panel/Avatar" to="." method="_on_avatar_toggled"]
 [connection signal="pressed" from="Pages/SidePanel/VBoxContainer/ButtonSpacer/Exit" to="." method="_on_exit_pressed"]
 [connection signal="confirmed" from="ConfirmExit" to="." method="_on_confirm_exit_confirmed"]
+[connection signal="confirmed" from="ConfirmLeaveMatch" to="." method="_on_confirm_leave_match_confirmed"]
 [connection signal="confirmed" from="QuickMatchFail" to="." method="_on_quick_match_fail_confirmed"]

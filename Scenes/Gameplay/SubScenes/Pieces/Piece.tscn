@@ -137,6 +137,7 @@ animations = [{
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
+mouse_default_cursor_shape = 2
 
 [node name="Circle" type="AnimatedSprite2D" parent="."]
 visible = false

@@ -6,6 +6,12 @@ var is_owned: bool
 var steam_id: int
 var steam_username: String
 
+# Offset for centering things on the board intersections
+var intersection_offset : Vector2 = Vector2(20,20)
+
+# Stores the animation for clicks
+var clicked_animations : Array = []
+
 @onready var gameplay_scene = preload("res://Scenes/Gameplay/Gameplay.tscn")
 
 func _process(delta: float) -> void:
