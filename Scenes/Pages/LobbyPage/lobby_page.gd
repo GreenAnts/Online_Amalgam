@@ -154,4 +154,4 @@ func _request_set_timer(start_or_stop : bool) -> void:
 # Actually start match
 func _request_start_match() -> void:
 	print("Match Starting: Requesting a transition from lobby page to gameplay scene")
-	NetworkingHandler.send_message(0, {"start_match": "", "from": Global.steam_id})
+	NetworkingHandler.send_message(0, {"start_match": "true", "from": Global.steam_id})

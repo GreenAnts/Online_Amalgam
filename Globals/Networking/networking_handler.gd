@@ -350,9 +350,9 @@ func read_messages() -> void:
 				# Stop Timer > abort countdown
 				elif message.payload['timer'] == "stop_timer":
 					SignalBus.set_timer.emit(false)
-			elif message.payload.has('start_match'):
+			elif message.payload['start_match'] == "true":
 				# Start Match > transition to gameplay scene with correct details
-					SignalBus.start_match.emit(message.payload['start_match'])
+					SignalBus.start_match.emit()
 			# During Gameplay
 			else:
 				SignalBus.received_turn_data.emit(message.payload)
