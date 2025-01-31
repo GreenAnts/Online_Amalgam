@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c5sa0nak8mkk1"]
+[gd_scene load_steps=20 format=3 uid="uid://c5sa0nak8mkk1"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay/gameplay.gd" id="1_b2lgf"]
 [ext_resource type="Texture2D" uid="uid://d32it1fpa760l" path="res://Media/Images/Menu_Assets/Power-White.png" id="5_84fro"]
@@ -18,6 +18,11 @@
 [ext_resource type="Texture2D" uid="uid://pjur8py82ojg" path="res://Media/Images/Primary_Assets/Pieces/Portal_Circle.png" id="17_0tymk"]
 [ext_resource type="Texture2D" uid="uid://curysdus50hbo" path="res://Media/Images/Primary_Assets/Pieces/Selected/Portal_Circle-toggle.png" id="18_dik75"]
 [ext_resource type="Texture2D" uid="uid://disnqxu83yp7u" path="res://Media/Images/Primary_Assets/Boards/Board_Standard.png" id="18_i4yni"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1bjvn"]
+bg_color = Color(0.176419, 0.176419, 0.176419, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
 
 [node name="Gameplay" type="Control"]
 layout_mode = 3
@@ -53,9 +58,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -660.0
+offset_left = 508.0
 offset_top = -450.0
-offset_right = -560.0
+offset_right = 608.0
 offset_bottom = 450.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -123,7 +128,7 @@ texture_pressed = ExtResource("18_dik75")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="BoardImage" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(1000, 1000)
 layout_mode = 1
 anchors_preset = 8
@@ -140,7 +145,7 @@ grow_vertical = 2
 texture = ExtResource("18_i4yni")
 expand_mode = 1
 
-[node name="BoardGrid" type="GridContainer" parent="TextureRect"]
+[node name="BoardGrid" type="GridContainer" parent="BoardImage"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -162,6 +167,47 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="ChatContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -313.0
+offset_right = 512.0
+offset_bottom = -16.0
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+alignment = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ChatContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 7.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_1bjvn")
+
+[node name="GameplayChat" type="VBoxContainer" parent="ChatContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ChatContainer"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="GameplayMessage" type="TextEdit" parent="ChatContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Enter Message Here..."
+wrap_mode = 1
+indent_wrapped_lines = true
+caret_blink = true
+caret_multiple = false
+draw_tabs = true
+
 [connection signal="toggled" from="PieceSelectors/RubyBtn" to="." method="_on_ruby_btn_toggled"]
 [connection signal="toggled" from="PieceSelectors/PearlBtn" to="." method="_on_pearl_btn_toggled"]
 [connection signal="toggled" from="PieceSelectors/AmberBtn" to="." method="_on_amber_btn_toggled"]
@@ -169,3 +215,4 @@ offset_bottom = 40.0
 [connection signal="toggled" from="PieceSelectors/AmalgamBtn" to="." method="_on_amalgam_btn_toggled"]
 [connection signal="toggled" from="PieceSelectors/VoidBtn" to="." method="_on_void_btn_toggled"]
 [connection signal="toggled" from="PieceSelectors/PortalBtn" to="." method="_on_portal_btn_toggled"]
+[connection signal="gui_input" from="ChatContainer/VBoxContainer/GameplayMessage" to="." method="_on_gameplay_message_gui_input"]

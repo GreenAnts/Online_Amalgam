@@ -44,7 +44,7 @@ func on_update_lobby_player_info(lobby_id: int):
 		start_btn.disabled = true
 
 # CHAT
-# Handle inputs withing the chat message textbox
+# Handle inputs within the chat message textbox
 func _on_match_lobby_message_gui_input(event: InputEvent) -> void:
 	# If "Enter" is pressed
 	if event.is_action_pressed("ui_text_completion_accept"):

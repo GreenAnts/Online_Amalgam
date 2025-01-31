@@ -17,7 +17,10 @@ const standard_script = preload("res://Scenes/Gameplay/GameMode/Standard/standar
 
 @onready var piece_selector_container = $PieceSelectors
 @onready var pieces_container = $PiecesContainer
-@onready var board_grid = $TextureRect/BoardGrid
+@onready var board_grid = $BoardImage/BoardGrid
+
+@onready var message = $ChatContainer/VBoxContainer/GameplayMessage
+@onready var chat = $ChatContainer/ScrollContainer/GameplayChat
 
 # Gamemode Selected (passed from previous scene)
 var game_mode : String = "sandbox" # Default Mode
@@ -37,8 +40,12 @@ func _ready() -> void:
 	#############
 	#  SignaLS  #
 	#############
+	# Handle information from intersections
 	SignalBus.intersection_clicked.connect(_intersection_clicked)
+	# Handle turn data from opponent
 	SignalBus.received_turn_data.connect(_receive_turn_data)
+	# Chat Messages
+	SignalBus.add_chat_message.connect(_add_message_to_chat)
 	###################
 	#  Set Game Mode  #
 	###################
@@ -249,3 +256,32 @@ func reset_all() -> void:
 	# Ensure all data is reset for a new game
 	BoardData.piece_dict = {}
 	Global.clicked_animations = []
+
+#################################
+#          CHAT                 #
+#################################
+# CHAT
+# Handle inputs within the chat message textbox
+func _on_gameplay_message_gui_input(event: InputEvent) -> void:
+	# If "Enter" is pressed
+	if event.is_action_pressed("ui_text_completion_accept"):
+		# Handle the input and don't use "enter" to handle any other events that may trigger
+		get_viewport().set_input_as_handled()
+		# Send the message via the Network Handler
+		_send_message()
+		
+func _send_message() -> void:
+	# Get the entered chat message with username attached
+	var this_message: String = message.get_text()
+	# If there is even a message
+	if this_message.strip_edges().length() > 0:
+		# Pass the message to Steam
+		var was_sent: bool = Steam.sendLobbyChatMsg(NetworkingHandler.lobby_id, str(Global.steam_username) + ": " + this_message)
+		# Was it sent successfully?
+		if not was_sent:
+			print("ERROR: Chat message failed to send.")
+	# Clear the chat input
+	message.clear()
+
+func _add_message_to_chat() -> void:
+	chat.add_child(message)

@@ -175,6 +175,7 @@ theme_override_font_sizes/font_size = 12
 text = "CUSTOM GAME"
 
 [node name="LobbiesPage" type="Control" parent="."]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
@@ -368,7 +369,6 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="LobbyPage" type="Control" parent="."]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0

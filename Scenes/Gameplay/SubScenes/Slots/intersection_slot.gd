@@ -26,8 +26,8 @@ func _on_mouse_exited() -> void:
 	self.set_default_cursor_shape(0)
 
 func play_click_anim(type) -> void:
-	# If there is already an animation playing (EDIT IF ADDING MORE CHILKDREN TO THIS SCENE)
-	if get_child_count() < 3:
+	# If there is already an animation playing
+	if get_child_count() < 3: #(EDIT IF ADDING MORE PRIMARY CHILDREN TO THIS SCENE)
 		# Play clicked animation
 		var clicked = clicked_scene.instantiate()
 		clicked.type = type
