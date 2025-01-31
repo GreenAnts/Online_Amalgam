@@ -45,6 +45,8 @@ func _ready() -> void:
 	SignalBus.received_turn_data.connect(_receive_turn_data)
 	# Chat Messages
 	SignalBus.add_chat_message.connect(_add_message_to_chat)
+	# A winner has been found
+	SignalBus.winner.connect(winner)
 	###################
 	#  Set Game Mode  #
 	###################
@@ -236,7 +238,7 @@ func reset_turn_data():
 	
 func _send_turn_data(data : Dictionary) -> void:
 	NetworkingHandler.send_message(opponent_id, turn_data)
-	
+
 func _receive_turn_data(data : Dictionary) -> void:
 	var player
 	#Send the data for the opposite piece type of your own.
@@ -256,6 +258,12 @@ func reset_all() -> void:
 	BoardData.piece_dict = {}
 	Global.clicked_animations = []
 
+func abandon() -> void:
+	NetworkingHandler.send_message(opponent_id, {"abandon" : "true"})
+	
+func winner() -> void:
+	_add_message_to_chat("We have a winner!")
+	
 #################################
 #          CHAT                 #
 #################################
@@ -287,3 +295,6 @@ func _add_message_to_chat(message) -> void:
 	# Without the timer it seems to grab the max_value prior to the child being added.
 	await(get_tree().create_timer(.05).timeout)
 	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value + 1
+
+func _on_exit_pressed() -> void:
+	get_parent().get_parent().confirm_leave_match.visible = true

@@ -244,7 +244,21 @@ func _on_lobby_message(this_lobby_id: int, user: int, buffer: String, chat_type:
 	var message = Label.new()
 	message.text = buffer
 	SignalBus.add_chat_message.emit(message)
-	
+
+func leave_lobby() -> void:
+	# Send leave request to Steam
+		Steam.leaveLobby(lobby_id)
+		# Wipe the Steam lobby ID then display the default lobby ID and player list title
+		lobby_id = 0
+		# Close session with all users
+		for this_member in lobby_members:
+			# Make sure this isn't your Steam ID
+			if this_member['steam_id'] != Global.steam_id:
+				# Close the P2P session
+				Steam.closeP2PSessionWithUser(this_member['steam_id'])
+		# Clear the local lobby list
+		lobby_members.clear()
+		
 ####################
 #    Auto Match    #
 ####################
@@ -350,10 +364,12 @@ func read_messages() -> void:
 				# Stop Timer > abort countdown
 				elif message.payload['timer'] == "stop_timer":
 					SignalBus.set_timer.emit(false)
-			elif message.payload['start_match'] == "true":
+			elif message.payload.has('start_match') && message.payload['start_match'] == "true":
 				# Start Match > transition to gameplay scene with correct details
 					SignalBus.start_match.emit()
 			# During Gameplay
+			elif message.payload.has('abandon'):
+				SignalBus.winner.emit(message.payload['abandon'])
 			else:
 				SignalBus.received_turn_data.emit(message.payload)
 

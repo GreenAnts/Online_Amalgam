@@ -64,7 +64,7 @@ func _on_start_match_toggled(toggled_on: bool) -> void:
 		_request_set_timer(true)
 		set_timer(true)
 	else:
-		set_timer(false)
+		_request_set_timer(false)
 		set_timer(false)
 
 # Timer Setting
@@ -96,6 +96,7 @@ func start_match():
 	self.get_parent().get_parent().get_node("GameplayWrapper").add_child(gameplay)
 	# Change visibility of scenes
 	SignalBus.change_pages.emit("gameplay")
+	reset_start_btn()
 	
 func _on_start_timer_timeout() -> void:
 	_request_start_match()
@@ -117,18 +118,10 @@ func _on_send_message_pressed() -> void:
 func _on_leave_lobby_pressed() -> void:
 	# If in a lobby, leave it
 	if NetworkingHandler.lobby_id != 0:
-		# Send leave request to Steam
-		Steam.leaveLobby(NetworkingHandler.lobby_id)
-		# Wipe the Steam lobby ID then display the default lobby ID and player list title
-		NetworkingHandler.lobby_id = 0
-		# Close session with all users
-		for this_member in NetworkingHandler.lobby_members:
-			# Make sure this isn't your Steam ID
-			if this_member['steam_id'] != Global.steam_id:
-				# Close the P2P session
-				Steam.closeP2PSessionWithUser(this_member['steam_id'])
-		# Clear the local lobby list
-		NetworkingHandler.lobby_members.clear()
+		_on_start_match_toggled(false)
+		# Disconnect from the Steam Lobby
+		NetworkingHandler.leave_lobby()
+		# Clear the chat to be used in the next lobby
 		for child in lobby_page_chat.get_children():
 			child.queue_free()
 		# Remove outdated lobbies listed

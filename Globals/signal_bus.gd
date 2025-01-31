@@ -31,3 +31,4 @@ signal start_match()
 signal intersection_clicked(coordinates : Vector2)
 # Read P2P Turn-Data Sent
 signal received_turn_data(data : Dictionary)
+signal winner(username : String)
