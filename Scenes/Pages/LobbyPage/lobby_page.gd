@@ -55,7 +55,8 @@ func _on_match_lobby_message_gui_input(event: InputEvent) -> void:
 
 # Signaled from NetworkHandler
 func on_add_chat_message(message) -> void:
-	lobby_page_chat.add_child(message)
+	if self.visible == true:
+		lobby_page_chat.add_child(message)
 
 # START MATCH
 func _on_start_match_toggled(toggled_on: bool) -> void:
@@ -98,7 +99,7 @@ func start_match():
 	
 func _on_start_timer_timeout() -> void:
 	_request_start_match()
-	start_match()
+	#start_match()
 
 func _on_send_message_pressed() -> void:
 	# Get the entered chat message with username attached

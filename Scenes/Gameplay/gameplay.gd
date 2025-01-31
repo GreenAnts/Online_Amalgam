@@ -20,7 +20,7 @@ const standard_script = preload("res://Scenes/Gameplay/GameMode/Standard/standar
 @onready var board_grid = $BoardImage/BoardGrid
 
 @onready var chat_scroll = $ChatContainer/ChatScrollContainer
-@onready var chat = $ChatContainer/ScrollContainer/GameplayChat
+@onready var chat = $ChatContainer/ChatScrollContainer/GameplayChat
 @onready var message = $ChatContainer/VBoxContainer/GameplayMessage
 
 # Gamemode Selected (passed from previous scene)
@@ -286,4 +286,6 @@ func _send_message() -> void:
 
 func _add_message_to_chat(message) -> void:
 	chat.add_child(message)
-	chat_scroll.set_deferred("scroll_vertical", chat_scroll.get_v_scroll_bar().max_value)
+	# Without the timer it seems to grab the max_value prior to the child being added.
+	await(get_tree().create_timer(.05).timeout)
+	chat_scroll.scroll_vertical = chat_scroll.get_v_scroll_bar().max_value + 1
