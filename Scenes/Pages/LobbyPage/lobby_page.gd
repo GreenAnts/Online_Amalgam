@@ -70,20 +70,20 @@ func _on_start_match_toggled(toggled_on: bool) -> void:
 # Timer Setting
 func set_timer(start_or_stop : bool) -> void:
 	var start_timer = $StartTimer
-	start_timer.start()
 	if start_or_stop == true:
+		start_timer.start()
 		message.visible = false
 		send_message.visible = false
 	else:
 		start_timer.stop()
-		message.visible = true
-		send_message.visible = true
 		reset_start_btn()
 
 func reset_start_btn():
 	start_btn.text = ("Start Match")
 	start_btn.modulate = Color("ffffff")
-
+	start_btn.button_pressed = false
+	message.visible = true
+	send_message.visible = true
 
 # Actually Start the Match
 func start_match():

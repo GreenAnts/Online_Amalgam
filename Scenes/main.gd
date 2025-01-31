@@ -110,11 +110,11 @@ func _on_confirm_exit_confirmed() -> void:
 # Leaving a match
 func _on_confirm_leave_match_confirmed() -> void:
 	change_page("landing")
-	NetworkingHandler.leave_lobby()
 	var gameplay = gameplay_wrapper.get_child(0)
 	gameplay.reset_all()
 	gameplay.queue_free()
 	gameplay.abandon()
+	NetworkingHandler.leave_lobby()
 
 # No available Lobbies > agree to create a new lobby
 func _on_quick_match_fail_confirmed() -> void:

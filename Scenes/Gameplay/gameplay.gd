@@ -261,8 +261,8 @@ func reset_all() -> void:
 func abandon() -> void:
 	NetworkingHandler.send_message(opponent_id, {"abandon" : "true"})
 	
-func winner() -> void:
-	_add_message_to_chat("We have a winner!")
+func winner(message) -> void:
+	_add_message_to_chat(winner)
 	
 #################################
 #          CHAT                 #
