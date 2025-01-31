@@ -92,9 +92,9 @@ func start_match():
 	# maybe "get_tree()"?
 	# Add Gameplay Scene
 	var gameplay = Global.gameplay_scene.instantiate()
-	self.get_parent().get_parent().get_node("Gameplay").add_child(gameplay)
+	self.get_parent().get_parent().get_node("GameplayWrapper").add_child(gameplay)
 	# Change visibility of scenes
-	SignalBus.change_pages.emit("lobbies")
+	SignalBus.change_pages.emit("gameplay")
 	
 func _on_start_timer_timeout() -> void:
 	_request_start_match()
@@ -154,4 +154,3 @@ func _request_set_timer(start_or_stop : bool) -> void:
 func _request_start_match() -> void:
 	print("Match Starting: Requesting a transition from lobby page to gameplay scene")
 	NetworkingHandler.send_message(0, {"message": "start_match", "from": Global.steam_id})
-	self.queue_free()

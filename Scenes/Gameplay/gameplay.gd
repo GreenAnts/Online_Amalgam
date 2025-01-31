@@ -19,8 +19,9 @@ const standard_script = preload("res://Scenes/Gameplay/GameMode/Standard/standar
 @onready var pieces_container = $PiecesContainer
 @onready var board_grid = $BoardImage/BoardGrid
 
-@onready var message = $ChatContainer/VBoxContainer/GameplayMessage
+@onready var chat_scroll = $ChatContainer/ChatScrollContainer
 @onready var chat = $ChatContainer/ScrollContainer/GameplayChat
+@onready var message = $ChatContainer/VBoxContainer/GameplayMessage
 
 # Gamemode Selected (passed from previous scene)
 var game_mode : String = "sandbox" # Default Mode
@@ -283,5 +284,6 @@ func _send_message() -> void:
 	# Clear the chat input
 	message.clear()
 
-func _add_message_to_chat() -> void:
+func _add_message_to_chat(message) -> void:
 	chat.add_child(message)
+	chat_scroll.set_deferred("scroll_vertical", chat_scroll.get_v_scroll_bar().max_value)
